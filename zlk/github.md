@@ -91,8 +91,20 @@
 2）忽略文件（略）
 
 3）提交更新
-  1查看文件修改：$ git diff
-  2提交对应文件：
+  查看文件修改：$ git diff（$ git status）
+
+1.在文件提交(项目已提交GitHub)：
+>$ git status (在文件夹所示上级目录打开)
+>
+>>$ git pull --all
+>
+>$ git add <fileName>
+>
+>$ git commit -m "提示"
+>
+>$ git push origin 分支（master）
+  
+
 
 
  切换分支：$ git checkout dingdong
