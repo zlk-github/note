@@ -93,18 +93,42 @@
 3）提交更新
   查看文件修改：$ git diff（$ git status）
 
-1.在文件提交(项目已提交GitHub)：
+在文件提交(项目已提交GitHub)：
 >$ git status (在文件夹所示上级目录打开)
 >
->>$ git pull --all
+>$ git pull --all
 >
->$ git add <fileName>
+>$ git add <fileName> 
 >
->$ git commit -m "提示"
+>$ git commit -m "提示"  或 $ git commit -a -m "提示"（用-a可以跳过add,跳过暂存区域）
 >
 >$ git push origin 分支（master）
   
+4）移除文件： $ git rm <fileName>
+
+5) 移动文件： $ git mv file_from file_to
+
+6)查看提交历史： $ git log
+
+7)撤销操作： $ git commit --amend(撤销操作，尝试重新提交)
+
+8）取消暂存：$ git reset HEAD <file>
+
+9)撤销修改 ： $ git checkout --<fileName>
+
+10)查看远程仓库：$ git remote <-v origin gitHub地址（<>内为可选）>
 
 
+### 3 Git分支
+1）创建分支
 
- 切换分支：$ git checkout dingdong
+>创建分支：$ git branch 分支名
+>
+>切换分支：$ git checkout 分支名
+>
+>>或：创建并切换到新分支：git branch + git checkout = git checkout -b 分支名
+>
+>push操作：$ git push origin 分支（master）
+
+
+ 
