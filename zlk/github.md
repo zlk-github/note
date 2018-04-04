@@ -46,17 +46,20 @@
 
 第二步：将本地文件提交到GitHub远程仓库（以下提交到https://github.com/zlk19921105/note.git）
 
->命令：
+>命令：（括号内，一般是出错时的处理）
 >
->1 将项目添加到git管理：$ git init 
+>1 将项目添加到git管理：$ git init（建议使用git --bare init ）
 >
 >2 实现指定文件跟踪：$ git add *
 >
 >3 进行提交，-m后为提交的说明：$ git commit -m "The first submissiom of the not"
 >
->4 将本地的仓库关联到github上:$ git remote add origin https://自己的仓库url地址（上面有说到https://github.com/zlk19921105/note.git）; 此处会提示输入GitHub账号的用户名与密码
+>4（git remote 
 >
->5 提交到GitHub master分支:$ git push -u origin master
+>
+> origin，再进行）将本地的仓库关联到github上:$ git remote add origin https://自己的仓库url地址（上面有说到https://github.com/zlk19921105/note.git）; 此处会提示输入GitHub账号的用户名与密码
+>
+>5  （$ git pull --rebase origin master，） 提交到GitHub master分支:$ git push -u origin master
 
 例：在d:\git 提交到https://github.com/zlk19921105/note.git，
 在当前文件（d:\git）中打开cmd,进行上面1到5的操作，如图所示（**注：使用cmd不需要$**）：
@@ -96,7 +99,7 @@
 在文件提交(项目已提交GitHub)：
 >$ git status (在文件夹所示上级目录打开)
 >
->$ git pull --all
+>$ git pull --all（更新）
 >
 >$ git add <fileName> 
 >
@@ -118,6 +121,14 @@
 
 10)查看远程仓库：$ git remote <-v origin gitHub地址（<>内为可选）>
 
+11）版本回退：
+ > 1.查看版本：$ git log 或$ git log --pretty=oneline
+ > $ git log 使用q退出
+ > 
+ >2接下来是回退版本，HEAD表示当前版本，HEAD^表示上一个版本，HEAD^^表示上上版本，当版本较大时，比如100，直接写成HEAD~100.执行：
+ >
+ >例：$ git reset --hard efa5971 ，其中efa5971为版本号。
+
 
 ### 3 Git分支
 1）创建分支
@@ -130,5 +141,12 @@
 >
 >push操作：$ git push origin 分支（master）
 
+>查看分支：$ git branch -vv
 
- 
+>修改分支：$ git branch -m 原分支名 新分支名
+
+>删除分支：$ git branch -d 分支名
+
+>项目第一次更新时需要，远程分支与本地联系$ git branch --set-upstream-to=origin/分支名称
+>合并分支$ git merge 分支名（一般是需要合并到master分支）
+
