@@ -1,6 +1,6 @@
 ## Spring 注解整理
 
-###1核心容器（Core）
+### 1.核心容器（Core）
 
 Spring Core 提供bean工厂 控制反转（IOC），利用IOC使配置与代码进行分离，降低耦合。
 >基于xml配置元数据;
