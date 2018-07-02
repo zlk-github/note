@@ -1,12 +1,10 @@
-## Spring 注解
+## Spring 注解整理
 
 ###1核心容器（Core）
 Spring Core 提供bean工厂 控制反转（IOC），利用IOC使配置与代码进行分离，降低耦合。
 >基于xml配置元数据;
 Spring 2.5引入了基于注释的配置元数据;
 从Spring 3开始基于java配置，使用注解，
-如：@Configuration, @Bean, @Import，@DependsOn，
-@Component, @Controller、、、
 
 1.1@Configuration  [kənˌfɪgəˈreɪʃn] 
 >作用：配置spring容器(应用上下文)，相当于把该类作为spring的xml配置文件中的
@@ -1150,19 +1148,746 @@ Spring 2.5引入了基于注释的配置元数据;
 >用法：只能放在Services实现类的public方法上（放在类上可能影响性能，放接口上可能无效），只有通过action直接调用Services方法时才会回滚。
 
 
-1.35 @within、@annotation、@target
+1.35 @within、@annotation、@target、@args（效果未测试出来）
+>@within：用于匹配所有持有指定注解类型内的方法；注解类型也必须是全限定类型名。
+>
+>@target：用于匹配当前目标对象类型的执行方法，其中目标对象持有指定的注解；注解类型也必须是全限定类型名。
 
-1.36@args
-
-1.37@Configurable
-
-1.38@EnableSpringConfigured
-
-1.39@EnableLoadTimeWeaving
-
-1.40@NonNull、@NonNullApi、@NonNullFields、@Nullable
-
-1.41@PersistenceContext 、 @PersistenceUnit
+>@args：用于匹配当前执行的方法传入的参数持有指定注解的执行；注解类型也必须是全限定类型名。
+>
+>@annotation：用于匹配当前执行方法持有指定注解的方法；
 
 
-@SessionScope
+
+
+1.36@Configurable
+>作用：用于Bean的自动装配（xml配置时，bean中可以省略id（此条测试，未通过））
+>
+>注：new 对象的时候就会自动帮你装配，而不需要用BeanFactory去获取（未测试）
+>
+>用法：注解类，@Configurable或者@Configurable("类名")，在xml中配置
+    </bean id="account" class="com.zlk.configurable.Account" scope="prototype"/>
+    </bean/>
+
+	例：xml文件
+	<?xml version="1.0" encoding="UTF-8"?>
+	<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+	       xsi:schemaLocation="
+	          http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	          http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+	          http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+	          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+	    <!-- 启用AspectJ对Annotation的支持 -->
+	 <!--   <context:spring-configured/>
+	    <context:component-scan base-package="com.zlk.configurable"/>
+	    <aop:aspectj-autoproxy/>-->
+	    <!--<bean class="com.zlk.configurable.Account" scope="prototype">
+	        <property name="fundsTransferService" ref="fundsTransferService"/>
+	    </bean>-->
+	
+	    <bean id="account" class="com.zlk.configurable.Account" scope="prototype">
+	    </bean>
+	</beans>
+	
+	1、@Configurable
+	//@Configurable("account")
+	public class Account {
+	
+	    public Account() {
+	        System.out.println("Account 对象为" + "Account");
+	    }
+	
+	    public void show(){
+	        System.out.println("---Account--");
+	    }
+	}
+	
+	2、public class Test {
+	    public static void main(String[] args) {
+	        //加载applicationContext.xml
+	        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("resources/configurable.xml");
+	        //获取实例
+	        Account account =(Account) context.getBean("account");
+	        account.show();
+	    }
+	}
+
+
+1.37@NonNull、@NonNullApi、@NonNullFields、@Nullable(包未导成功，未测试)
+>作用：
+>>@NonNull注释在特定参数,返回值或字段不能 null(不需要参数和返回值 @NonNullApi和 @NonNullFields应用)。
+
+>>@Nullable注释在特定参数,返回值或字段 null.
+
+>>@NonNullApi注释在包级别声明非空参数和返回值的默认行为。
+
+>>@NonNullFields注释在包级别声明非空字段的默认行为。
+>
+>用法：
+
+###2、测试
+2.1@BootstrapWith（理解模糊）
+>作用：@BootstrapWith是一个类级别注释,用于配置Spring和TestContext框架是如何引导的。具体地说, @BootstrapWith用于指定一个自定义 TestContextBootstrapper。
+>用法：注解类、接口
+
+2.2@ContextConfiguration
+>作用：用于确认如何加载和配置一个ApplicationContext集成测试，
+>
+>@ContextConfiguration声明应用程序上下文资源 locations或注释 classes将用于加载上下文。
+>用法：注解类。
+
+	例：加载配置文件（如1）或者配置类（如2），若是多个配置文件用逗号隔开。
+	1、@ContextConfiguration(Locations="../applicationContext.xml")  
+	public class XmlApplicationContextTests {
+	    // class body...
+	}
+
+	2、@ContextConfiguration(classes = SimpleConfiguration.class)
+	public class XmlApplicationContextTests {
+	    // class body...
+	}
+
+2.3@WebAppConfiguration(未完成测试，报错)
+>作用：与@ContextConfiguration一起使用，使用的默认值 "file:src/main/webapp"对web应用程序的根的路径(即。资源基础的路径)。在幕后使用的资源基础路径创建一个 MockServletContext这是 ServletContext测试的 WebApplicationContext.
+>
+>用法：注解测试类，
+>
+>>属性：classpath:和 file
+>>@WebAppConfiguration("src/test/webapp")
+>>@WebAppConfiguration("classpath:test-web-resources")
+
+	例：@RunWith(SpringJUnit4ClassRunner.class)//指定单元测试类
+	// @WebAppConfiguration omitted on purpose
+	@ContextConfiguration(classes = WebConfig.class)//配置文件或者配置类
+	public class EmployeeTest {
+	 
+	    @Autowired
+	    private WebApplicationContext webAppContext;
+	    private MockMvc mockMvc;
+	 
+	    @Before
+	    public void setup() {
+	        MockitoAnnotations.initMocks(this);
+	        mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext).build();
+	    }
+	     
+	    ...
+	}
+
+2.4@ContextHierarchy（未测试）
+
+	例：@RunWith(SpringRunner.class)
+	@ContextHierarchy({
+	    @ContextConfiguration(name = "parent", locations = "/app-config.xml"),
+	    @ContextConfiguration(name = "child", locations = "/user-config.xml")
+	})
+	public class BaseTests {}
+	
+	@ContextHierarchy(
+	    @ContextConfiguration(
+	        name = "child",
+	        locations = "/test-user-config.xml",
+	        inheritLocations = false
+	))
+	public class ExtendedTests extends BaseTests {}
+
+
+2.5@RunWith
+>作用：用于指明单元测试类。
+>
+>用法：注解单元测试类。例子见2.3。
+
+2.6@TestExecutionListeners（未测试）
+>作用：用于指定在测试类执行之前，可以做的一些动作，如这里的>DependencyInjectionTestExecutionListener.class，就可以对一测试类中的依赖进行注入，>TransactionalTestExecutionListener.class用于对事务进行管理；这两个都是Srping自带的； 我们也可以实现自>己的Listener类来完成我们自己的操作，只需要继续类
+>org.springframework.test.context.support.AbstractTestExecutionListener
+>
+>用法：注解类。
+>
+	例：
+	@RunWith(SpringJUnit4ClassRunner.class)
+	@ContextConfiguration(locations = { "classpath*:/spring1.xml", "classpath*:/spring2.xml" })
+	@TestExecutionListeners( { DependencyInjectionTestExecutionListener.class, TransactionalTestExecutionListener.class })
+	@Transactional
+	public class TestClass {
+		@Inject
+		//这个类会在执行时被注入，这里是按类型注入，如果想按名称注入，需要加上@Named注解，如@Named("class1")
+		//实现类可以加上@Named("class1")注解，也可以是配置在配置文件中的
+		Class1 class1;
+		
+		@Test 
+		public void  t1(){}
+
+2.7@Transactional
+>作用：和@TestExecutionListeners中的
+>TestExecutionListener.class配合使用，用于保证插入的>数据库中的测试数据，在测试完后，事务自动回滚，将插入的数据给删除掉，保证数据库的干净。（此处是针对测试类的用法，不是业务层）
+>
+>注：可以使用@Commit 、 @Rollback控制提交和回滚（@Rollback(false)不回滚，@Rollback(true)回滚）。 
+>@BeforeTransaction注解事务执行前的方法，@AfterTransaction注解事务执行后的方法；另有@Sql、@SqlGroup、@SqlConfig
+>
+>用法：注解方法、接口、类（例见2.6）
+
+2.8@IfProfileValue（理解模糊）
+>作用：（不明）
+>用法：注解类
+
+	例：只附测试类（结果Test ignored，原因不明）
+	@RunWith(SpringJUnit4ClassRunner.class)//表示整合JUnit4进行测试
+	//@ComponentScan("com.zlk.within"),报错
+	@IfProfileValue(name="java.vendor", value="com zlk within.")
+	@ContextConfiguration(locations={"classpath:spring-config.xml"})//加载spring配置文件
+	public class IfProfileValueTest {
+	    @Resource
+	    private Member member;
+	    @Resource
+	    private Leader leader;
+	    // 实现
+	    @Test
+	    public void test1() {
+	        System.out.println("---------------member---------------");
+	        member.who();
+	        System.out.println("---------------leader---------------");
+	        leader.who();
+	    }
+	}
+
+2.9@ProfileValueSourceConfiguration(不理解)
+>作用：类级别注解用来指定当通过@IfProfileValue注解获取已配置的profile值时使用何种ProfileValueSource。 如果@ProfileValueSourceConfiguration没有在测试中声明，将默认使用 SystemProfileValueSource。
+
+2.10@Timed
+>作用:测试方法必须在执行时间内完成（毫秒），否则会报错，测试失败。
+>用法：注解方法或注解上。配合@Test使用
+>
+	例：@Test
+	    @Timed(millis = 1000)
+	    public void test2() {
+	        System.out.println("---------------member---------------");
+	        member.who();
+	        System.out.println("---------------leader---------------");
+	        leader.who();
+	    }
+
+2.11@Repeat
+>作用：控制测试方法执行次数。
+>用法：@Repeat(执行次数)
+
+	 例：@Repeat(5)
+	    @Test
+	    public void test3() {
+	        System.out.println("执行一次");
+	    }
+
+
+2.12@SpringJUnitConfig、@SpringJUnitWebConfig（未测试）
+>作用：组合注解，用于加载配置
+
+2.13@EnabledIf（未测试）
+>作用：@EnabledIf条件满足允许执行，@DisabledIf条件满足禁止执行。
+
+	例：1、@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	@EnabledIf(
+	    expression = "#{systemProperties['os.name'].toLowerCase().contains('mac')}",
+	    reason = "Enabled on Mac OS"
+	)
+	public@interface EnabledOnMac {}
+	
+	2、@Target({ElementType.TYPE, ElementType.METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	@DisabledIf(
+	    expression = "#{systemProperties['os.name'].toLowerCase().contains('mac')}",
+	    reason = "Disabled on Mac OS"
+	)
+	public@interface DisabledOnMac {}
+
+
+2.13@ResponseBody [Response [rɪˈspɒns]响应]
+>作用：@Responsebody 注解表示该方法的返回的结果直接写入 HTTP 响应正文（ResponseBody）中，一般在异步获取
+>数据时使用，通常是在使用 @RequestMapping 后，返回值通常解析为跳转路径，加上 @Responsebody 后返回结果不
+>会被解析为跳转路径，而是直接写入HTTP 响应正文中。
+
+	例：
+	@RequestMapping(value = "user/login/{id}/{name}/{status}")
+	@ResponseBody
+	public User login(@PathVariable int id, @PathVariable String name, @PathVariable boolean status) {
+	//返回一个User对象响应ajax的请求
+	    return new User(id, name, status);
+	}
+
+2.14@DirtiesContext
+
+
+### 3、数据访问（Data Access）
+3.1@Transactional
+>作用：做事务管理
+>
+>用法：注解类、接口、方法（推荐）
+>
+>属性：![Alt text](./images/201806291523.PNG)
+
+	例：@Transactional(readOnly = true)
+	public class DefaultFooService implements FooService {
+	
+	    public Foo getFoo(String fooName) {
+	        // do something
+	    }
+	
+	    // these settings have precedence for this method
+	    @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+	    public void updateFoo(Foo foo) {
+	        // do something
+	    }
+	}
+
+3.2@EnableTransactionManagement（spring Boot注解）
+>用于启动注解事务管理。
+
+	例@EnableTransactionManagement // 启注解事务管理，等同于xml配置方式的 <tx:annotation-driven />
+	@SpringBootApplication
+	public class ProfiledemoApplication {
+	
+	    @Bean
+	    public Object testBean(PlatformTransactionManager platformTransactionManager){
+	        System.out.println(">>>>>>>>>>" + platformTransactionManager.getClass().getName());
+	        return new Object();
+	    }
+	
+	    public static void main(String[] args) {
+	        SpringApplication.run(ProfiledemoApplication.class, args);
+	    }
+	}
+
+3.3@EventListener
+
+3.4@TransactionalEventListener
+>作用：注解模型与发布事件
+>
+>用法：需要管理的bean的公共方法使用@EventListener 注解来消费事件。
+>@TransactionalEventListener 提供事务绑定事件支持。
+
+3.5@Repository
+>作用：让spring创建相应实例。（用于dao层）
+>
+>用法：注解类。@Repository(value="userDao")或者@Repository
+
+	例： @Repository 
+	 public class UserDao { … } 
+
+3.6@PersistenceContext、@PersistenceUnit（两个都是jpa注解）
+>作用：@PersistenceContext注入的是实体管理器，执行持久化操作的，需要配置文件persistence.xml。
+>@PersistenceUnit
+
+3.7@EnableLoadTimeWeaving
+>作用：做时间监控（不明白）
+>用法：注解类，配合@Configuration使用。
+
+	例：
+	@Configuration
+	 @EnableLoadTimeWeaving
+	 public class AppConfig {
+	     // application-specific @Bean definitions ...
+	 }
+
+###4、Web Servlet
+4.1@RequestMapping、@GetMapping、@PostMapping、@PutMapping、@DeleteMapping、@PatchMapping
+>作用：@RequestMapping处理请求地址映射。后面注解等同于@RequestMapping加method属性时的效果。
+
+>>@RequestMapping属性：（参考https://www.cnblogs.com/qq78292959/p/3760560.html）
+
+>>value：指定请求的实际地址。
+
+>>method： 指定请求的method类型， GET、POST、PUT、DELETE等。
+
+>>consumes： 指定处理请求的提交内容类型（Content-Type），例如application/json, text/html。
+
+>>produces: 指定返回的内容类型，仅当request请求头中的(Accept)类型中包含该指定类型才返回。
+>
+>>params： 指定request中必须包含某些参数值是，才让该方法处理。
+
+>>headers： 指定request中必须包含某些指定的header值，才能让该方法处理请求。
+
+>用法：@RequestMapping注解类（类上面的地址作为父路径）和方法。
+
+	例：@RestController
+    @RequestMapping("/hello")
+	public class HelloController {
+	
+	    @RequestMapping(value="/hsay",method= RequestMethod.GET)
+	    public String sayHello(@PathVariable("id") Integer id){
+	        return "id:"+id;
+	    }
+	}
+
+4.2@ExceptionHandler
+>作用：统一处理某一类的异常，减少代码重复率。（参考https://blog.csdn.net/liujia120103/article/details/75126124）
+
+>用法：注解方法。
+
+4.3@ControllerAdvice
+>作用：全局异常管理（spring能扫描到的类，就可以实现该异常处理）
+>
+>用法：注解异常管理类，配合@ExceptionHandler使用
+
+4.4@ResponseStatu
+>作用：用于自定义异常，可配合@ExceptionHandler使用（参考https://blog.csdn.net/lovesomnus/article/details/73188823）
+>
+>用法：注解类
+
+4.5@ResponseBody
+>作用：将方法的返回的结果直接写入 HTTP 响应正文（ResponseBody）中，一般在异步获取数据时使用，通常是在使用 @RequestMapping 后，返回值通常解析为跳转路径，加上 @Responsebody 后返回结果不会被解析为跳转路径，而是直接写入HTTP 响应正文中。（一般返回数据json或者xml时使用）。
+
+	注：(前台提交时)
+	A) GET、POST方式提时， 根据request header Content-Type的值来判断:
+	
+	    application/x-www-form-urlencoded， 可选（即非必须，因为这种情况的数据@RequestParam, @ModelAttribute也可以处理，当然@RequestBody也能处理）；
+	    multipart/form-data, 不能处理（即使用@RequestBody不能处理这种格式的数据）；
+	    其他格式， 必须（其他格式包括application/json, application/xml等。这些格式的数据，必须使用@RequestBody来处理）；
+	B) PUT方式提交时， 根据request header Content-Type的值来判断:
+	
+	    application/x-www-form-urlencoded， 必须；
+	    multipart/form-data, 不能处理；
+	    其他格式， 必须；
+说明：request的body部分的数据编码格式由header部分的Content-Type指定；
+>用法：注解方法，一般配合@RequestMapping使用。
+
+	例：@RequestMapping(value = "user/login")
+	@ResponseBody
+	// 将ajax（datas）发出的请求写入 User 对象中,返回json对象响应回去
+	public User login(User user) {   
+	    User user = new User();
+	    user .setUserid(1);
+	    return user ;
+	}
+
+4.6@Controller
+>作用：使用该注解后，spring容器会对齐生成一个对应Bean(首字母小写)命名的action。配合@RequestMapping使用时将定位到页面。配合@ResponseBody使用时可返回json数据。
+>用法：注解类。（Controller层）
+
+	例：
+	1、 @Controller
+	//或@Controller(value="UserAction") 或@Controller("UserAction")
+	 public class UserAction{
+		@RequestMapping(value = "user/login")
+		// 将ajax（datas）发出的请求写入 User 对象中,返回json对象响应回去
+		public String login(User user) {   
+		    return "/views/index";
+		}
+	 }
+
+    2、@Controller
+	 public class UserAction{
+		@RequestMapping(value = "user/login")
+		@ResponseBody
+		// 将ajax（datas）发出的请求写入 User 对象中,返回json对象响应回去
+		public User login(User user) {   
+		    User user = new User();
+		    user .setUserid(1);
+		    return user ;
+		}
+	 }
+
+4.7@RestController
+>作用：@Controller与@ResponseBody组合而成，其返回时将不定位页面，而是直接返回数据。
+>需要定位页面需要使用modelandview类。
+>用法：注解controller类。
+
+	例：1、@RestController
+	 public class UserAction{
+		@RequestMapping(value = "user/login")
+		// 将ajax（datas）发出的请求写入 User 对象中,返回json对象响应回去
+		public User login(User user) {   
+		    User user = new User();
+		    user .setUserid(1);
+		    return user ;
+		}
+	 }
+
+	2、@RestController
+	 public class UserAction{
+		@RequestMapping(value = "user/login")
+		// 将ajax（datas）发出的请求写入 User 对象中,返回json对象响应回去
+		public ModelAndView login(User user) {   
+		    return new  ModelAndView("/views/index.html");
+		}
+	 }
+
+
+4.8@PathVariable
+>作用：用于获取参数。（需要占位，前后端参数位置要对应）
+>用法：注解形参。
+
+例：@RequestMapping("/edit/{id}/{name}")
+    public String edit(Model model, @PathVariable long id,@PathVariable String name) {
+        
+        return page("edit");
+    }
+ 
+4.9@RequestParam
+>作用：用于获取参数。
+
+>>属性：
+
+>>value：参数名字，即入参的请求参数名字，如username表示请求的参数区中的名字为username的参数的值将传入；
+
+>>required：是否必须，默认是true，表示请求中一定要有相应的参数，否则将报404错误码；
+
+>>defaultValue：默认值，表示如果请求中没有同名参数时的默认值
+
+>用法：注解形参。void method(@RequestParam String name) 或void method(@RequestParam("name") String name);
+
+例： @Controller
+  @RequestMapping("/wx")
+  public class WxController {
+  
+      @Autowired
+      private WxService wxService;
+     private static final Log log= LogFactory.getLog(WxController.class);
+ 
+     @RequestMapping(value = "/service",method = RequestMethod.GET)
+     public void acceptWxValid(@RequestParam String signature, @RequestParam String timestampthrows IOException {
+   
+    }
+
+4.10@RequestHeader
+>作用：可以把Request请求header部分的值绑定到方法的参数上。
+>用法：注解形参。
+	
+	例：这是一个Request 的header部分：
+	
+	[plain] view plaincopy
+	Host                    localhost:8080  
+	Accept                  text/html,application/xhtml+xml,application/xml;q=0.9  
+	Accept-Language         fr,en-gb;q=0.7,en;q=0.3  
+	Accept-Encoding         gzip,deflate  
+	Accept-Charset          ISO-8859-1,utf-8;q=0.7,*;q=0.7  
+	Keep-Alive              300  
+	
+	[java] view plaincopy
+	@RequestMapping(“/displayHeaderInfo.do”)  
+	public void displayHeaderInfo(@RequestHeader(“Accept-Encoding”) String encoding,  
+	                              @RequestHeader(“Keep-Alive”) long keepAlive)  {  
+	  
+	  //…  
+	  
+	}  
+	上面的代码，把request header部分的 Accept-Encoding的值，绑定到参数encoding上了， Keep-Alive header的值绑定到参数keepAlive上。
+
+4.11@MatrixVariable
+>作用：获取URL上对应名称的值。
+>用法：注解形参。
+
+	例：1、// GET /pets/42;q=11;r=22
+	
+	@GetMapping("/pets/{petId}")
+	public void findPet(@PathVariable String petId, @MatrixVariable int q) {
+	
+	    // petId == 42
+	    // q == 11
+	}
+
+	2、// GET /owners/42;q=11/pets/21;q=22
+	
+	@GetMapping("/owners/{ownerId}/pets/{petId}")
+	public void findPet(
+	        @MatrixVariable(name="q", pathVar="ownerId") int q1,
+	        @MatrixVariable(name="q", pathVar="petId") int q2) {
+	
+	    // q1 == 11
+	    // q2 == 22
+	}
+
+4.12@CookieValue
+>作用：获取cookie的值。
+
+>>属性
+>
+>>(1) value 请求参数的参数名；
+
+>>(2) required 该参数是否必填，默认为true(必填)，当设置成必填时，如果没有传入参数，报错；
+
+>>(3) defaultValue 设置请求参数的默认值；
+
+>用法：注解形参。
+
+	例：
+	@RequestMapping("/springmvc")
+	@Controller
+	public class HelloWorld {
+	@RequestMapping("/testCookieValue")
+	    public String testCookieValue(@CookieValue("JSESSIONID")String sessionId){
+	        System.out.println("testCookieValue: "+sessionId);
+	        return "success";
+	    }
+
+4.13@RequestPart
+>作用：@RequestPart 绑定“multipart/data”数据，除了能绑定@RequestParam 能做到的请求参数外，还能绑定上传的文件等
+>用法：与@RequestParam相似。注解形参。
+
+4.14@ModelAttribute
+>作用：注解方法时，controller中被@ModelAttribute注解的方法会先执行，后执行请求方法。
+>注解形参时，如注解@ModelAttribute("user")，用于获取参，user类必须有无参构造。
+>用法：绑定形参或者无返回值的方法。
+
+	例：1、@ModelAttribute
+	public String test1(UserModel user) 
+	
+	2、public String test1(@ModelAttribute("user") UserModel user)   
+
+4.15@SessionAttribute
+>作用：让参数在多个请求间共享
+>用法：注解类。
+
+	例：@Controller
+	@RequestMapping("sc")
+	@SessionAttributes("name")
+	public class SessionController {
+	    @RequestMapping("session")
+	    public String sessions(Model model,HttpSession session){
+	        model.addAttribute("name", "winclpt");
+	        session.setAttribute("myName", "chke");
+	        return "session";
+	}
+	
+	上面的代码将Model中的name参数保存到了session中（如果Model中没有name参数，而session中存在一个name参数，那么SessionAttribute会讲这个参数塞进Model中）
+	
+	SessionAttribute有两个参数：
+	
+	　　String[] value：要保存到session中的参数名称
+	
+	　　Class[] typtes：要保存的参数的类型，和value中顺序要对应上
+	
+	所以可以这样写：@SessionAttributes(types = {User.class,Dept.class},value={“attr1”,”attr2”})
+	
+	原理理解：它的做法大概可以理解为将Model中的被注解的attrName属性保存在一个SessionAttributesHandler中，在每个RequestMapping的方法执行后，这个SessionAttributesHandler都会将它自己管理的“属性”从Model中写入到真正的HttpSession；同样，在每个RequestMapping的方法执行前，SessionAttributesHandler会将HttpSession中的被@SessionAttributes注解的属性写入到新的Model中。
+	
+	　　如果想删除session中共享的参数，可以通过SessionStatus.setComplete()，这句只会删除通过@SessionAttribute保存到session中的参数
+
+4.16@SessionAttributes
+>作用：@SessionAttributes注解就可以使得模型中的数据存储一份到session域中。
+>>属性：　1、names：这是一个字符串数组。里面应写需要存储到session中数据的名称。
+
+>>2、types：根据指定参数的类型，将模型中对应类型的参数存储到session中
+
+>> 3、value：其实和names是一样的。
+	
+	例:@SessionAttributes(value={"names"},types={Integer.class})
+	 @Controller
+	 public class Test {
+	  
+	     @RequestMapping("/test")
+	     public String test(Map<String,Object> map){
+	          map.put("names", Arrays.asList("caoyc","zhh","cjx"));
+	          map.put("age", 18);
+	          return "hello";
+	     }
+	 }
+	
+	JSP
+	request中names:${requestScope.names}<br/>
+	request中age:${requestScope.age}<br/>
+	<hr/>
+	session中names:${sessionScope.names }<br/>
+	session中age:${sessionScope.age }<br/>
+
+4.17@RequestAttribute
+>作用：可以被用于访问由过滤器或拦截器创建的、预先存在的请求属性（不明白）
+>
+>用法：注解形参。
+
+	例：1、 @RequestMapping("/reqAttr")
+	    public String handle(@RequestAttribute("reqStr") String str, Model model)
+	    {
+	        System.out.println("--> reqStr : " + str);
+	        model.addAttribute("sth", str);
+	        return "/examples/targets/test1";
+	    }
+	
+	2、@WebFilter(filterName = "myFilter", description = "测试过滤器", urlPatterns = { "/*" })
+	public class MyFilter implements Filter
+	{
+	    
+	    @Override
+	    public void init(FilterConfig filterConfig) throws ServletException
+	    {}
+	    
+	    @Override
+	    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
+	    {
+	        System.out.println("--> MyFilter Do.");
+	        request.setAttribute("reqStr", "万万没想到，啦啦啦啦啦！");
+	        
+	        chain.doFilter(request, response);
+	        
+	    }
+	    
+	    @Override
+	    public void destroy()
+	    {}
+	    
+	}
+
+4.18 @JsonView
+
+4.19 @InitBinder
+
+4.20@CrossOrigin
+
+4.21@EnableWebMvc
+
+###5、Web Reactive	
+5.1@Validated、@Valid
+
+5.2@EnableWebFlux
+
+###6、Integration
+6.1@WebService
+
+6.2@WebMethod
+
+6.3@SOAPBinding
+
+6.4@JmsListener
+
+6.5@EnableJms
+
+6.6@Header
+
+6.7@SendTo
+
+6.8@Valid
+
+6.9@Header、@Headers
+
+6.10@Payload
+
+6.11@ManagedResource
+
+6.12@ManagedAttribute
+
+6.13@ManagedOperation
+
+6.15 @ManagedOperationParameters、@ManagedOperationParameter
+
+6.16@EnableMBeanExport
+
+6.17@EnableAsync、@EnableScheduling
+
+6.18@Scheduled
+
+6.19@Configurable
+
+6.20@Cacheable 、@CacheEvict 、@CachePut 、@Caching 、@CacheConfig 
+
+6.21 @CacheResult、 @CachePut、 @CacheRemove 、 @CacheRemoveAll、@CacheDefaults、 @CacheKey 、@CacheValue
+
+###7、Languages
+7.1@field
+
+7.2@get
+
+7.3@LocalServerPort
+
+7.4@Nested
+
+7.5@DisplayName
+
+7.6@ConfigurationProperties
