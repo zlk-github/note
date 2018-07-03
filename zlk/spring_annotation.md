@@ -1,6 +1,7 @@
 ## Spring 注解整理
 
-###1核心容器（Core）
+### 1核心容器（Core）
+
 Spring Core 提供bean工厂 控制反转（IOC），利用IOC使配置与代码进行分离，降低耦合。
 >基于xml配置元数据;
 Spring 2.5引入了基于注释的配置元数据;
@@ -1225,7 +1226,8 @@ Spring 2.5引入了基于注释的配置元数据;
 >
 >用法：
 
-###2、测试
+### 2、测试
+
 2.1@BootstrapWith（理解模糊）
 >作用：@BootstrapWith是一个类级别注释,用于配置Spring和TestContext框架是如何引导的。具体地说, @BootstrapWith用于指定一个自定义 TestContextBootstrapper。
 >用法：注解类、接口
@@ -1417,6 +1419,7 @@ Spring 2.5引入了基于注释的配置元数据;
 
 
 ### 3、数据访问（Data Access）
+
 3.1@Transactional
 >作用：做事务管理
 >
@@ -1487,7 +1490,8 @@ Spring 2.5引入了基于注释的配置元数据;
 	     // application-specific @Bean definitions ...
 	 }
 
-###4、Web Servlet
+### 4、Web Servlet
+
 4.1@RequestMapping、@GetMapping、@PostMapping、@PutMapping、@DeleteMapping、@PatchMapping
 >作用：@RequestMapping处理请求地址映射。后面注解等同于@RequestMapping加method属性时的效果。
 
@@ -1767,7 +1771,10 @@ Spring 2.5引入了基于注释的配置元数据;
 
 >>2、types：根据指定参数的类型，将模型中对应类型的参数存储到session中
 
->> 3、value：其实和names是一样的。
+>> 
+>
+>
+>value：其实和names是一样的。
 	
 	例:@SessionAttributes(value={"names"},types={Integer.class})
 	 @Controller
@@ -1826,28 +1833,289 @@ Spring 2.5引入了基于注释的配置元数据;
 	}
 
 4.18 @JsonView
+>作用：@JsonView注解用来过滤序列化对象的字段属性，转换json.
+>
+>用法：注解属性字段或者方法。
 
-4.19 @InitBinder
+	例：public class View {
+	   public interface Summary {}
+	   public interface SummaryWithDetail extends Summary{}
+	}
+	
+	public class User { 
+	
+	  @JsonView(View.Summary.class) 
+	  private Long id; 
+	  @JsonView(View.Summary.class) 
+	  private String firstname; 
+	  @JsonView(View.Summary.class) 
+	  private String lastname; 
+	
+	  @JsonView(View.SummaryWithDetail .class) 
+	  private String email; 
+	  @JsonView(View.SummaryWithDetail .class) 
+	  private String address; 
+	
+	  private String postalCode; 
+	  private String city; 
+	  private String country;
+	
+	  ...
+	}
+	
+	@RestController
+	public class UserRestController{
+	  @Autowired 
+	  private UserService userService;
+	
+	  @RequestMapping("/user")
+	  @JsonView(View.Summary.class) 
+	  public List<User> getUsers(){
+	    return userService.listUsers();
+	  }
+	
+	  @RequestMapping("/userWithDetail")
+	  @JsonView(View.SummaryWithDetail.class) 
+	  public List<User> getUsersWithDetail(){
+	    return userService.listUsers();
+	  }
+	}
+
+4.19@InitBinder
+>作用：表单多对象精准绑定。
+>
+>用法：注解形参。
+
+	例：
+	<form action="/test/test" method="post">  
+	   <input type="text" name="user.id" value="huo_user_id">  
+	   <input type="text" name="user.name" value="huo_user_name">  
+	   <input type="text" name="addr.id" value="huo_addr_id">  
+	   <input type="text" name="addr.name" value="huo_addr_name">  
+	   <input type="submit" value="提交">  
+	</form>  
+	
+	
+	@Controller  
+	@RequestMapping("/test")  
+	public class TestController {  
+	// 绑定变量名字和属性，参数封装进类  
+	    @InitBinder("user")  
+	    public void initBinderUser(WebDataBinder binder) {  
+	        binder.setFieldDefaultPrefix("user.");  
+	    }  
+	    // 绑定变量名字和属性，参数封装进类  
+	    @InitBinder("addr")  
+	    public void initBinderAddr(WebDataBinder binder) {  
+	        binder.setFieldDefaultPrefix("addr.");  
+	    }     
+	      
+	    @RequestMapping("/test")  
+	    @ResponseBody  
+	    public Map<String,Object> test(HttpServletRequest request,@ModelAttribute("user") User user,@ModelAttribute("addr") Addr addr){  
+	        Map<String,Object> map=new HashMap<String,Object>();  
+	        map.put("user", user);  
+	        map.put("addr", addr);  
+	        return map;  
+	    }  
 
 4.20@CrossOrigin
+>作用：用于实现跨域访问。
+
+>用法：注解类或者方法。
+
+	例：
+	@CrossOrigin()
+	@RestController
+	@RequestMapping("/test")
+	public class TestController {
+	 
+	    @RequestMapping("/{id}")
+	    public Account retrieve(@PathVariable Long id) {
+	        // ...
+	    }
+	 
+	    @RequestMapping(method = RequestMethod.DELETE, path = "/{id}")
+	    public void remove(@PathVariable Long id) {
+	        // ...
+	    }
 
 4.21@EnableWebMvc
+>作用：用于启用MVC Java config。相当于xml中的<mvc:annotation-driven> 。
 
-###5、Web Reactive	
+>用法：注解类，配合@Configuration使用。
+
+	例：@Configuration
+	@EnableWebMvc
+	public class WebConfig {
+	}
+
+### 5、Web Reactive	
+
 5.1@Validated、@Valid
+>作用：用于校验bean中相关注解标注的属性值。
+>
+>>注：可使用@Validated校验的bean属性注解有：
+>>@Null	限制只能为null
+>
+>>@NotNull	限制必须不为null
+>
+>>@AssertFalse	限制必须为false
+>
+>>@AssertTrue	限制必须为true
+>
+>>@DecimalMax(value)	限制必须为一个不大于指定值的数字
+>
+>>@DecimalMin(value)	限制必须为一个不小于指定值的数字
+>
+>>@Digits(integer,fraction)	限制必须为一个小数，且整数部分的位数不能超过integer，小数部分的位数不能超过fraction
+>
+>>@Future	限制必须是一个将来的日期
+>
+>>@Max(value)	限制必须为一个不大于指定值的数字
+>
+>>@Min(value)	限制必须为一个不小于指定值的数字
+>
+>>@Past	验证注解的元素值（日期类型）比当前时间早
+>
+>>@Pattern(value)	限制必须符合指定的正则表达式
+>
+>>@Size(max,min)	限制字符长度必须在min到max之间
+>
+>>@NotEmpty	验证注解的元素值不为null且不为空（字符串长度不为0、集合大小不为0）
+>
+>>@NotBlank	验证注解的元素值不为空（不为null、去除首位空格后长度为0），不同于@NotEmpty，@NotBlank只应用于字符串且在比较时会去除字符串的空格
+>
+>>@Email	验证注解的元素值是Email，也可以通过正则表达式和flag指定自定义的email格式
+
+>用法：注解形参。
+
+	例：
+	public class User {  
+	    private String id; 
+	    @NotEmpty(message = "{edit.username.null}")
+	    private String username;
+	    @Size(min=6 ,max= 20 ,message = "{edit.password.size}")
+	    private String password;
+	   ......
+	}
+	
+	@Controller  
+	public class UserController {  
+	  
+	    @RequestMapping("/save")  
+	    public String save(@Validated User user, BindingResult result) {  
+	        if(result.hasErrors()) {  
+	            return "error";  
+	        }  
+	        return "success";  
+	    }  
+	}
 
 5.2@EnableWebFlux
 
-###6、Integration
+### 6、Integration
+
 6.1@WebService
+>作用：实现远程调用。
+
+>>属性：
+
+>>1、serviceName： 对外发布的服务名，指定 Web Service 的服务名称：wsdl:service。缺省值为 Java 类的简单名称 + Service。（字符串）
+
+>>2、endpointInterface： 服务接口全路径, 指定做SEI（Service EndPoint Interface）服务端点接口
+
+>>3、name：此属性的值包含XML Web Service的名称。在默认情况下，该值是实现XML Web Service的类的名称，wsdl:portType 的名称。缺省值为 Java 类的简单名称 + Service。（字符串）
+
+>>4、portName：  wsdl:portName。缺省值为 WebService.name+Port。
+
+>>5、targetNamespace：指定你想要的名称空间，认是使用接口实现类的包名的反缀
+
+>>6、wsdlLocation：指定用于定义 Web Service 的 WSDL 文档的 Web 地址。Web 地址可以是相对路径或绝对路径。（字符串）
+
+>>注意：实现类上可以不添加Webservice注解  
+
+>用法：注解类。
+
+例：
+	/**
+	 * 将 Java 类标记为实现 Web Service，或者将 Java 接口标记为定义 Web Service 接口
+	 * @author 
+	 *
+	 */
+	//修改目标空间   ，修改服务名         在wsdl那里的xml文件显示对应的修改信息
+	@WebService(targetNamespace="http://www.itcast.cn",serviceName="MyService")
+	public class HelloService {
+	    //修改方法名  返回值的名字
+	    @WebMethod(operationName="hello")
+	    @WebResult(name="ret")
+	    public String sayHello(
+	            //修改参数名字 
+	            @WebParam(name="name")
+	            String name,
+	            @WebParam(name="age")
+	            int age){
+	        System.out.println("sayHello called...");
+	        return "hello " + name;
+	    }
+	    //此方法 本系统测试 不对外发布
+	    @WebMethod(exclude=true)
+	    public String sayHello2(String name){
+	        System.out.println("sayHello called...");
+	        return "hello " + name;
+	    }
+	    
+	    public static void main(String[] args) {
+	        //参数1：绑定服务的地址   参数2：提供服务的实例
+	        Endpoint.publish("http://192.168.1.101:5678/hello", new HelloService());
+	        System.out.println("server ready...");
+	    }
+	}
 
 6.2@WebMethod
+>作用：注释表示作为一项 Web Service 操作的方法，将此注释应用于客户机或服务器服务端点接口（SEI）上的方法，或者应用于 JavaBeans 端点的服务器端点实现类。（用于向外公布，它修饰的方法是webservice方法）。
+
+>>属性：要点： 仅支持在使用 @WebService 注释来注释的类上使用 @WebMethod 注释
+
+>>1、operationName：指定与此方法相匹配的wsdl:operation 的名称。缺省值为 Java 方法的名称。（字符串）
+
+>>2、action：定义此操作的行为。对于 SOAP 绑定，此值将确定 SOAPAction 头的值。缺省值为 Java 方法的名称。（字符串）
+
+>>3、exclude：指定是否从 Web Service 中排除某一方法。缺省值为 false。（布尔值）
+
+>用法：注解到@WebService注解类的方法上。
 
 6.3@SOAPBinding
 
 6.4@JmsListener
+>作用：异步接收消息，@JmsListener公开的bean公开一个JMS侦听器端点。（参考：http://websystique.com/spring/spring-4-jms-activemq-example-with-jmslistener-enablejms/）
+
+>用法：注解方法。
+
+例：@Component publicc lassMyService {
+
+    @JmsListener(destination = "myDestination")
+    public void processOrder(String data) { ... }
+}
 
 6.5@EnableJms
+>作用：创建消息侦听容器。
+
+>用法：注解类，配合@Configuration使用。
+
+例：@Configuration
+@EnableJms
+public class AppConfig {
+	@Bean
+	public DefaultJmsListenerContainerFactory jmsListenerContainerFactory() {
+	        DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
+	        factory.setConnectionFactory(connectionFactory());
+	        factory.setDestinationResolver(destinationResolver());
+	        factory.setSessionTransacted(true);
+	        factory.setConcurrency("3-10");
+	        return factory;
+	}
+}
 
 6.6@Header
 
