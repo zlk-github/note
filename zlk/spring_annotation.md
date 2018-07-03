@@ -2117,35 +2117,324 @@ public class AppConfig {
 	}
 }
 
-6.6@Header
+6.6@Header、@Headers
+>作用：@Header带注释的方法参数中提取特定头值,包括标准JMS标头。
+>@Headers-注解参数为了访问所有头信息，必须能指定为java.util.Map.
+
+>用法：注解形参
+
+	例：@ComponentpublicclassMyService {
+	
+	    @JmsListener(destination = "myDestination")
+	    public void processOrder(Order order, @Header("order_type") String orderType) {
+	        ...
+	    }
+	}
 
 6.7@SendTo
+>作用：会将接收到的消息发送到指定的路由目的地，所有订阅该消息的用户都能收到，属于广播。
 
-6.8@Valid
+>用法：注解方法。
 
-6.9@Header、@Headers
+	例：@JmsListener(destination = "myDestination")
+		@SendTo("status")
+		public Message<OrderStatus> processOrder(Order order) {
+		    // order processingreturn MessageBuilder
+		            .withPayload(status)
+		            .setHeader("code", 1234)
+		            .build();
+		}
 
-6.10@Payload
+6.8@Payload
 
-6.11@ManagedResource
+6.9@ManagedResource
+>作用：将类的所有实例标识为JMX受控资源(参考：https://blog.csdn.net/yaerfeng/article/details/28232435)
+>
+>用法：注解类。
 
-6.12@ManagedAttribute
+例：
 
-6.13@ManagedOperation
+6.10@ManagedAttribute
+>作用：将方法标识为JMX操作
+>
+>用法：注解方法。（例见6.9）
 
-6.15 @ManagedOperationParameters、@ManagedOperationParameter
 
-6.16@EnableMBeanExport
+6.11@ManagedOperation
+>作用：将getter或者setter标识为部分JMX属性
+>
+>用法：注解get与set方法。（例见6.9）
 
-6.17@EnableAsync、@EnableScheduling
 
-6.18@Scheduled
+6.12 @ManagedOperationParameters、@ManagedOperationParameter
+>作用：定义操作说明。
 
-6.19@Configurable
+>用法：注解方法。（例见6.9）
 
-6.20@Cacheable 、@CacheEvict 、@CachePut 、@Caching 、@CacheConfig 
+6.13@EnableMBeanExport
+>作用：在javaconfig类中开启注解，相当与<context:mbean-export/>
 
-6.21 @CacheResult、 @CachePut、 @CacheRemove 、 @CacheRemoveAll、@CacheDefaults、 @CacheKey 、@CacheValue
+>用法：注解类。
+
+	例：@EnableMBeanExport(server="myMBeanServer", defaultDomain="myDomain")
+    //相当于<context:mbean-exportserver="myMBeanServer"default-domain="myDomain"/>
+	@Configuration
+	ContextConfiguration {
+	
+	}
+
+6.14@EnableAsync
+>作用：@EnableAsync配合@Async异步执行。（参考：https://blog.csdn.net/u010502101/article/details/78759786）
+
+>用法：注解类。
+
+	例：@Component
+	public class CountNumber {
+	    @Async
+	    public void PrintNumber(){
+	        for(int i=1; i<10; i++){
+	            System.out.println("i = " + i);
+	        }
+	    }
+	}
+	
+	/*@SpringBootApplication注解与@ComponentScan、@EnableAsync注解达到相同的功效*/
+	//@SpringBootApplication
+	@ComponentScan
+	@EnableAsync
+	public class Springboot3Application {
+	
+	    public static void main(String[] args) throws Exception {
+	
+	        ConfigurableApplicationContext context = SpringApplication.run(Springboot3Application.class, args);
+	
+	        /*@Async和@EnableAsync配合使用*/
+	    context.getBean(CountNumber.class).PrintNumber();
+	        for(int i=1; i<10; i++){
+	            TimeUnit.MICROSECONDS.sleep(1);
+	            System.out.println("------------------");
+	        }
+	        context.close();
+	    }
+	}
+
+6.15@Scheduled、@EnableScheduling
+>作用：定时任务在配置类上添加@EnableScheduling开启对定时任务的支持，在相应的方法上添加@Scheduled声明需要执行的定时任务。 
+
+	@Scheduled属性参数：
+	1、cron
+	2、zone
+	3、fixedDelay和fixedDelayString
+	4、fixedRate和fixedRateString
+	5、initialDelay和initialDelayString
+		注：1.cron是设置定时执行的表达式，如 0 0/5 * * * ?每隔五分钟执行一次
+			2.zone表示执行时间的时区
+			3.fixedDelay 和fixedDelayString 表示一个固定延迟时间执行，上个任务完成后，延迟多长时间执行
+			4.fixedRate 和fixedRateString表示一个固定频率执行，上个任务开始后，多长时间后开始执行
+			5.initialDelay 和initialDelayString表示一个初始延迟时间，第一次被调用前延迟的时间
+
+>用法：@EnableScheduling注解配置类，@Scheduled注解方法。
+
+	例：1、@Configuration
+	@ComponentScan({"com.xingguo.logistics.service.aspect")
+	@EnableScheduling
+	public class AopConfig{
+	}
+	
+	2、@Service
+	public class TestService2 {
+	
+	    private static final SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+	
+	    //初始延迟1秒，每隔2秒
+	    @Scheduled(fixedRateString = "2000",initialDelay = 1000)
+	    public void testFixedRate(){
+	        System.out.println("fixedRateString,当前时间：" +format.format(new Date()));
+	    }
+	
+	    //每次执行完延迟2秒
+	    @Scheduled(fixedDelayString= "2000")
+	    public void testFixedDelay(){
+	        System.out.println("fixedDelayString,当前时间：" +format.format(new Date()));
+	    }
+	
+	    //每隔3秒执行一次
+	    @Scheduled(cron="0/3 * * * * ?")
+	    public void testCron(){
+	        System.out.println("cron,当前时间：" +format.format(new Date()));
+	    }
+	}
+	
+	3、public class TestController {
+	    public static void main(String[] args) {
+	        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AopConfig.class);
+	    }
+	}
+
+6.16@Cacheable
+>作用：（参考：https://www.cnblogs.com/fashflying/p/6908028.html）
+@Cacheable可以标记在一个方法上，也可以标记在一个类上。当标记在一个方法上时表示该方法是支持缓存的，当标记在一个类上时则表示该类所有的方法都是支持缓存的。对于一个支持缓存的方法，Spring会在其被调用后将其返回值缓存起来，以保证下次利用同样的参数来执行该方法时可以直接从缓存中获取结果，而不需要再次执行该方法。Spring在缓存方法的返回值时是以键值对进行缓存的，值就是方法的返回结果，至于键的话，Spring又支持两种策略，默认策略和自定义策略，这个稍后会进行说明。需要注意的是当一个支持缓存的方法在对象内部被调用时是不会触发缓存功能的。@Cacheable可以指定三个属性，value、key和condition。
+
+>>属性：
+>
+>> value属性是必须指定的，其表示当前方法的返回值是会被缓存在哪个Cache上的，对应Cache的名称.
+>
+>>key属性是用来指定Spring缓存方法的返回结果时对应的key的。该属性支持SpringEL表达式。当我们没有指定该属性时，Spring将使用默认策略生成key。Spring还为我们提供了一个root对象可以用来生成key。
+
+>>有的时候我们可能并不希望缓存一个方法所有的返回结果。通过condition属性可以实现这一功能。condition属性默认为空，表示将缓存所有的调用情形。其值是通过SpringEL表达式来指定的，当为true时表示进行缓存处理；当为false时表示不进行缓存处理，即每次调用该方法时该方法都会执行一次。
+
+>用法：注解类、方法。
+
+	
+	例：1、@Cacheable({"cache1", "cache2"})//Cache是发生在cache1和cache2上的
+	
+	   public User find(Integer id) {
+	
+	      returnnull;
+	
+	   }
+	
+	2、 @Cacheable(value="users", key="#id")
+	
+	   public User find(Integer id) {
+	
+	      returnnull;
+	
+	   }
+	
+	3、 @Cacheable(value={"users", "xxx"}, key="caches[1].name")
+	
+	   public User find(User user) {
+	
+	      returnnull;
+	
+	   }
+	
+	4、 @Cacheable(value={"users"}, key="#user.id", condition="#user.id%2==0")
+	
+	   public User find(User user) {
+	
+	      System.out.println("find user by user " + user);
+	
+	      return user;
+	
+	   }
+
+6.17@CacheEvict
+>作用：@CacheEvict是用来标注在需要清除缓存元素的方法或类上的。当标记在一个类上时表示其中所有的方法的执行都会触发缓存的清除操作。@CacheEvict可以指定的属性有value、key、condition、allEntries和beforeInvocation。其中value、key和condition的语义与@Cacheable对应的属性类似。即value表示清除操作是发生在哪些Cache上的（对应Cache的名称）；key表示需要清除的是哪个key，如未指定则会使用默认策略生成的key；condition表示清除操作发生的条件。下面我们来介绍一下新出现的两个属性allEntries和beforeInvocation。（见例：）
+
+>用法：注解方法、类。
+
+	例：
+	1、allEntries属性
+	       allEntries是boolean类型，表示是否需要清除缓存中的所有元素。默认为false，表示不需要。当指定了allEntries为true时，Spring Cache将忽略指定的key。有的时候我们需要Cache一下清除所有的元素，这比一个一个清除元素更有效率。
+	
+	   @CacheEvict(value="users", allEntries=true)
+	
+	   public void delete(Integer id) {
+	
+	      System.out.println("delete user by id: " + id);
+	
+	   }
+	
+	2、 beforeInvocation属性
+	       清除操作默认是在对应方法成功执行之后触发的，即方法如果因为抛出异常而未能成功返回时也不会触发清除操作。使用beforeInvocation可以改变触发清除操作的时间，当我们指定该属性值为true时，Spring会在调用该方法之前清除缓存中的指定元素。
+	
+	   @CacheEvict(value="users", beforeInvocation=true)
+	
+	   public void delete(Integer id) {
+	
+	      System.out.println("delete user by id: " + id);
+	
+	   }
+
+6.18@CachePut
+>作用：与@Cacheable不同的是使用@CachePut标注的方法在执行前不会去检查缓存中是否存在之前执行过的结果，而是每次都会执行该方法，并将执行结果以键值对的形式存入指定的缓存中。属性和@Cacheable相同。
+
+>用法：注解方法、类。
+	
+	例：// @CachePut也可以标注在类上和方法上。使用@CachePut时我们可以指定的属性跟@Cacheable是一样的。
+	
+	   @CachePut("users")//每次都会执行方法，并将结果存入指定的缓存中
+	
+	   public User find(Integer id) {
+	
+	      returnnull;
+	
+	   }
+
+6.19@Caching
+>作用：@Caching注解可以让我们在一个方法或者类上同时指定多个Spring Cache相关的注解。其拥有三个属性：cacheable、put和evict，分别用于指定@Cacheable、@CachePut和@CacheEvict。
+
+>用法：注解方法、类。
+
+	例：@Caching(cacheable = @Cacheable("users"), evict = { @CacheEvict("cache2"),
+	
+	         @CacheEvict(value = "cache3", allEntries = true) })
+	
+	   public User find(Integer id) {
+	
+	      returnnull;
+	
+	   }
+
+6.20@CacheConfig 
+>作用：有时候一个类中可能会有多个缓存操作，而这些缓存操作可能是重复的。这个时候可以使用@CacheConfig。
+
+>用法：@CacheConfig是一个类级别的注解，允许共享缓存的名称、KeyGenerator、CacheManager 和CacheResolver。 
+该操作会被覆盖。
+
+	例：@CacheConfig("books")
+	public class BookRepositoryImpl implements BookRepository {
+	
+	    @Cacheable
+	    public Book findBook(ISBN isbn) {...}
+	}
+	
+	#### 开启缓存注解
+	java类配置：
+	@Configuration
+	@EnableCaching
+	public class AppConfig {
+	}
+	
+	XML 配置：
+	<beans xmlns="http://www.springframework.org/schema/beans"
+	    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	    xmlns:cache="http://www.springframework.org/schema/cache"
+	    xsi:schemaLocation="
+	        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	        http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
+	
+	        <cache:annotation-driven />
+	
+	</beans>
+
+6.21 @CacheKey
+>作用：该注解用来在请求命令的参数上标记，使其作为缓存的Key值，如果没有标注则会使用所有参数。如果同事还是使用了@CacheResult和@CacheRemove注解的cacheKeyMethod方法指定缓存Key的生成，那么该注解将不会起作用。属性value。
+
+>用法：注解形参。
+	
+	例：
+	@Service
+	public class CacheKeyDemo2 {
+	 
+	    @Autowired
+	    private RestTemplate restTemplate;
+	 
+	    @HystrixCommand(fallbackMethod = "hiConsumerFallBack")
+	    public User hiConsumer(@CacheKey("id") User user) {
+	        
+	        //SERVICE_HI是服务端的spring.application.name，并且大写，hi为服务端提供的接口
+	        return restTemplate.getForEntity("http://SERVICE_HI/hi", User.class, user.getId()).getBody();
+	    }
+	    
+	    public String hiConsumerFallBack(String id, Throwable e) {
+	        return "This is a error";
+	    }
+	 
+	}
+	 
 
 ###7、Languages
 7.1@field
@@ -2153,9 +2442,157 @@ public class AppConfig {
 7.2@get
 
 7.3@LocalServerPort
+>作用：通过 @LocalServerPort注解,获取测试时动态的端口号。
+
+>用法：
+
+	例：@RunWith(SpringRunner.class)
+	@SpringBootTest(classes = ServerApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+	public class Test {
+	
+	    @LocalServerPort
+	    private int port;
+	
+	    private URL base;
+	    private Gson gson = new Gson();
+	
+	    @Autowired
+	    private TestRestTemplate restTemplate;
+	
+	    @Before
+	    public void setUp() throws Exception {
+	        this.base = new URL("http://localhost:" + port + "/");
+	    }
+	
+	    @Test
+	    public void test() {
+	        ResponseEntity<String> test = this.restTemplate.getForEntity(
+	                this.base.toString() + "/task", String.class, "test");
+	        System.out.println(test.getBody());
+	    }
+	}
 
 7.4@Nested
+	例：class SpecificationLikeTests {
+	
+	  @Nested
+	  @DisplayName("a calculator")
+	  inner class Calculator {
+	     val calculator = SampleCalculator()
+	
+	     @Test
+	     fun `should return the result of adding the first number to the second number`() {
+	        val sum = calculator.sum(2, 4)
+	        assertEquals(6, sum)
+	     }
+	
+	     @Test
+	     fun `should return the result of subtracting the second number from the first number`() {
+	        val subtract = calculator.subtract(4, 2)
+	        assertEquals(2, subtract)
+	     }
+	  }
+	}
 
 7.5@DisplayName
+（例见7.4）
 
 7.6@ConfigurationProperties
+>作用：@ConfigurationProperties的大致作用就是通过它可以把properties或者yml配置直接转成对象。
+
+>用法：注解类、方法。
+
+
+	例：1、1yml配置：
+	spring: 
+	  redis: 
+	    dbIndex: 0
+	    hostName: 192.168.58.133
+	    password: nmamtf
+	    port: 6379
+	    timeout: 0
+	    poolConfig: 
+	      - maxIdle: 8
+	      - minIdle: 0
+	      - maxActive: 8
+	      - maxWait: -1
+	
+	1、2@Component
+	@ConfigurationProperties(prefix="spring.redis")  
+	public class RedisProps {
+	 
+		private int dbIndex;
+		@NotNull
+		private String hostname;
+		private String password;
+		@NotNull
+		private int port;
+		private long timeout;
+		private List<Map<String,String>> poolConfig;
+		
+		public int getDbIndex() {
+			return dbIndex;
+		}
+		public void setDbIndex(int dbIndex) {
+			this.dbIndex = dbIndex;
+		}
+		public String getHostname() {
+			return hostname;
+		}
+		public void setHostname(String hostname) {
+			this.hostname = hostname;
+		}
+		public String getPassword() {
+			return password;
+		}
+		public void setPassword(String password) {
+			this.password = password;
+		}
+		public int getPort() {
+			return port;
+		}
+		public void setPort(int port) {
+			this.port = port;
+		}
+		public long getTimeout() {
+			return timeout;
+		}
+		public void setTimeout(long timeout) {
+			this.timeout = timeout;
+		}
+		public List<Map<String, String>> getPoolConfig() {
+			return poolConfig;
+		}
+		public void setPoolConfig(List<Map<String, String>> poolConfig) {
+			this.poolConfig = poolConfig;
+		}
+		
+	}
+	
+	1、3@Configuration  
+	@EnableAutoConfiguration
+	public class RedisConfig {
+		
+	    @Bean  
+	    @ConfigurationProperties(prefix="spring.redis.poolConfig")  
+	    public JedisPoolConfig getRedisConfig(){  
+	        JedisPoolConfig config = new JedisPoolConfig();
+	        return config;  
+	    }  
+	      
+	    @Bean  
+	    @ConfigurationProperties(prefix="spring.redis")  
+	    public JedisConnectionFactory getConnectionFactory(){  
+	        JedisConnectionFactory factory = new JedisConnectionFactory();  
+	        factory.setUsePool(true);
+	        JedisPoolConfig config = getRedisConfig();  
+	        factory.setPoolConfig(config);  
+	        return factory;  
+	    }  
+	      
+	    @Bean  
+	    public RedisTemplate<?, ?> getRedisTemplate(){  
+	        RedisTemplate<?,?> template = new StringRedisTemplate(getConnectionFactory());  
+	        return template;  
+	    }  
+	}    
