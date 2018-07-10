@@ -1,0 +1,3 @@
+1.@ConstructorProperties注解用于注解构造函数，但没发现有什么实际作用。
+2.@Required用于注解set方法，且该set方法对应属性需要在xml中进行配置。什么场景需要用到该注解。
+3.@DependsOn注解用来控制Bean的加载顺序，不太明白。（应该怎么测试？）

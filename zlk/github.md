@@ -48,18 +48,15 @@
 
 >命令：（括号内，一般是出错时的处理）
 >
->1 将项目添加到git管理：$ git init（建议使用git --bare init ）
+>1 将项目添加到git管理：$ git init
 >
 >2 实现指定文件跟踪：$ git add *
 >
 >3 进行提交，-m后为提交的说明：$ git commit -m "The first submissiom of the not"
 >
->4（git remote 
+>4将本地的仓库关联到github上:$ git remote add origin https://自己的仓库url地址（上面有说到https://github.com/zlk19921105/note.git）; 此处会提示输入GitHub账号的用户名与密码
 >
->
-> origin，再进行）将本地的仓库关联到github上:$ git remote add origin https://自己的仓库url地址（上面有说到https://github.com/zlk19921105/note.git）; 此处会提示输入GitHub账号的用户名与密码
->
->5  （$ git pull --rebase origin master，） 提交到GitHub master分支:$ git push -u origin master
+>5 提交到GitHub master分支:$ git push -u origin master
 
 例：在d:\git 提交到https://github.com/zlk19921105/note.git，
 在当前文件（d:\git）中打开cmd,进行上面1到5的操作，如图所示（**注：使用cmd不需要$**）：
@@ -149,4 +146,37 @@
 
 >项目第一次更新时需要，远程分支与本地联系$ git branch --set-upstream-to=origin/分支名称
 >合并分支$ git merge 分支名（一般是需要合并到master分支）
+
+2）一般在开发中使用分支提交代码的流程。
+>初次建立分支（该分支未提交过代码，或者需要将master分支代码合并到当前分支进行开发时），若该分支未A分支：
+
+>>1、实现指定文件跟踪 git add *（A分支）
+
+>>2、git commit -m"提交代码到当前分支"（A分支）
+
+>>3、切换master分支 git checkout master
+
+>>4、更新master分支代码到本地 git pull --all(master分支)
+
+>>5、切换到A分支 git checkout A
+
+>>6、合并master分支代码到A分支 git merge master（A分支）
+
+>>7、将所有代码push到当前A分支上 git push origin A(A分支)
+
+>分支已经提交到master合并，关闭问题。当前分支出现bug，当前分支未A分支。问题序号为10
+
+>>1、将A分支代码全部提交，（不在赘述）
+
+>>2、切换master分支 git checkout master
+
+>>3、更新master分支 git pull --all (master分支)
+
+>>4、建bug分支，分支名为 问题序号-fixbug,用于关联原来的分支 : 
+> git branch 10-fixbug
+
+>>5、重新再github上打开问题。
+
+>>6、将修改后的代码提交的10-fixbug,并向master分支提交合并请求。请求合并成功后，关闭问题。
+
 

@@ -1,0 +1,20 @@
+1、
+servlet的生命周期分为以下几个步骤，
+第一，加载并实例化，
+第二，初始化，
+第三，服务，
+第四，销毁。
+容器启动的时候，会加载servlet的class，并new出这个对象，然后，当用户请求这个servlet的时候，容器会调用init方法初始化这个servlet，这也是整个生命周期中只会调用一次的方法，然后，会调用service方法，由这个方法调用doGet或doPost方法来响应用户，然后，容器在可用资源紧张或是长期没有对Servlet发出请求的情况下，会销毁这个servlet。
+
+
+
+2、@Target
+取值	注解使用范围
+METHOD	可用于方法上
+TYPE	可用于类或者接口上
+ANNOTATION_TYPE	可用于注解类型上（被@interface修饰的类型）
+CONSTRUCTOR	可用于构造方法上
+FIELD	可用于域上
+LOCAL_VARIABLE	可用于局部变量上
+PACKAGE	用于记录java文件的package信息
+PARAMETER	可用于参数上
