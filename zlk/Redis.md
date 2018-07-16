@@ -1,16 +1,16 @@
-## Redis笔记
+## Redis基础笔记
+
+注：该笔记主要为Redis数据类型与相关命令介绍
 
 ### 1、简介
 
 1.1 Redis有ANSI C编写，其是一个key-value存储系统，
 
-	其value支持string（字符串）、list（链表）、set（集合）、zset(有序集合)、Hashes(哈希值)。
-	
-	其key支持list（列表）、Sets（集合）、sorted Sets（有序集合）、Hashes(哈希值)
+	支持string（字符串）、list（链表）、set（集合）、zset(有序集合)、Hash(哈希值)。
 	
 	其数据支持push/pop/add/remove等操作。数据会周期性的缓存于内存或者虚拟内存。虚拟高，但是有一定程度的数据丢失。支持主从同步（将数据同步到多台从库上）。
 	
-	作用：用于解决海量数据下数据库的性能瓶颈问题，其有很高的扩展性。（hive,hbase,mongodb,Redis）外加solar收缩引擎
+	作用：用于解决海量数据下数据库的性能瓶颈问题，其有很高的扩展性。
 
 常见大数据两种解决方式：
 
@@ -36,7 +36,9 @@
 
 Redis下载地址：http//redis.io/download
 
-步骤与参数配置省略，默认端口6379
+步骤省略，默认端口6379
+
+参数配置：（参考《redis实战》）
 
 简单操作
 
@@ -781,3 +783,84 @@ zset也是string类型元素集合，但是每个元素会关联一个double类�
 ![Alt text](./images/redis/201807161715.png)
 
 
+2）exists(确认key是否存在)
+
+用法：exists key,存在返回1，不存在返回0
+
+3）del(删除key)
+
+用法：del key,成功返回1
+
+4）expire(设置key的过效时间，单位秒)
+
+用法：expire addr 时间
+
+
+5）move(当前数据库中的key转移到其他数据库中)
+
+用法：move key db(数据库)
+
+例：如图
+
+![Alt text](./images/redis/201807161728.png)
+
+6）persist(移除key的过期时间)
+
+用法：persist key,（用ttl key查看效果，有效返回-1）
+
+7）randomkey(随机返回一个key)
+
+用法：randomkey
+
+8）rename(重命名key)
+
+用法：rename key key_new
+
+9）type(返回值的类型)
+
+用法：type key
+
+
+3.2 服务器相关命令
+
+1）ping(测试连接是否存活)
+
+用法：ping
+
+注：正常返回PONG
+
+2)echo(命令行输出)
+
+用法：echo "内容"
+
+3)select(数据库选择)
+
+用法：select 编号（redis提供0-15）
+
+4）quit(退出连接)
+
+用法：quit
+
+5)dbsize(当前数据库中key的数目)
+
+用法：dbsize
+
+6)info(获取服务器的信息和统计)
+
+用法：info
+
+7)monitor(实时转储收到的请求)
+
+用法：monitor
+
+8）config get(获取服务器配置信息)
+
+用法：例config get dir
+
+9)flushdb(删除当前选择数据库中的所有key)
+
+用法：flushdb,(用dbsize查看效果)
+
+10）flushall(删除所有数据库的所有key)
+
+用法：flushall
