@@ -61,7 +61,7 @@ Redis下载地址：http//redis.io/download
 
 2.1 String类型
 
-2.1.1 String类型是二进制安全的，可以包含任何数据，如图片或者序列化对象。在Redis中String可以看做一个Byte数组，
+String类型是二进制安全的，可以包含任何数据，如图片或者序列化对象。在Redis中String可以看做一个Byte数组，
 其上限为1G字节。结构如下：
 
 	struct sdshdr{
@@ -206,7 +206,7 @@ Redis下载地址：http//redis.io/download
 
 
 
-2.1.2 hashes类型
+2.2 hashes类型
 
 (key为键名称，field为字段名称，value为值)
 Redis hash是一个string类型的field和value的映射表。它的添加、删除操作都是0（1）（平均）。其适合存储对象。相较与每个字段存成string类型。对象存储在hash类型会占更少的空间。且存取整个对象更为方便。其省内存是因为hash对象开始是使用zipmap(small hash)存储，也可以拍照将zipmap修改为hash。
@@ -339,7 +339,7 @@ Redis 中每个 hash 可以存储 232 - 1 键值对（40多亿）。
 
 
 
-2.1.3 lists类型
+2.3 lists类型
 
 list 是一个链表结果，主要有push、pop、获取范围内的所有值等，操作中的key是链表名字。
 
@@ -474,7 +474,7 @@ list的pop操作有阻塞版本，可以避免轮询。
 
 
 
-2.1.4 sets类型
+2.4 sets类型
 
 set集合有添加删除，还可以求交并差。操作中key为集合名称。
 
@@ -512,12 +512,272 @@ set是通过hash table实现的，应用于sns中的好友推荐和blog的tag功
 ![Alt text](./images/redis/201807161053.png)
 
 
-4）spop(随机删除一个元素)
+4）sdiff(差集)
 
-用法：spop key 
+用法：sdiff key1 key2
 
-注：随机删除对应key中的一个元素，并返回该元素。
+注：key1中较key2多出的元素。
 
 例：如图
 
-![Alt text](./images/redis/201807161053.png)
+![Alt text](./images/redis/201807161126.png)
+
+
+
+5）sdiffstore(差集赋予set)
+
+用法：sdiffstore key3 key1 key2
+
+注：key1中较key2多出的元素赋予key3。
+
+例：如图
+
+![Alt text](./images/redis/201807161131.png)
+
+
+
+
+5）sdiffstore(差集赋予set)
+
+用法：sdiffstore key3 key1 key2
+
+注：key1中较key2多出的元素赋予key3。
+
+例：如图
+
+![Alt text](./images/redis/201807161131.png)
+
+
+6）sinter(交集)
+
+用法：sinter key1 key2 
+
+例：如图
+
+![Alt text](./images/redis/201807161416.png)
+
+
+7）sinterstore(交集赋予set)
+
+用法：sinterstore key3 key1 key2 
+
+例：如图
+
+![Alt text](./images/redis/201807161420.png)
+
+
+
+
+8）sunion(并集)
+
+用法：sunion key1 key2 
+
+例：如图
+
+![Alt text](./images/redis/201807161425.png)
+
+
+9）sunionstore(并集赋予set)
+
+用法：sunionstore key3 key1 key2 
+
+例：如图
+
+![Alt text](./images/redis/201807161425.png)
+
+
+
+
+10）smove(移除第一个set对应元素到第二个set中)
+
+用法：smove  key1 key2 value1
+
+例：如图
+
+![Alt text](./images/redis/201807161430.png)
+
+
+11）scard(统计对应key中元素数量)
+
+用法：scard  key
+
+例：如图
+
+![Alt text](./images/redis/201807161434.png)
+
+
+12）sismember(查询对应key中是否存在对应value)
+
+用法：sismember  key value
+
+注：存在返回1，不存在返回0
+
+例：如图
+
+![Alt text](./images/redis/201807161438.png)
+
+
+13）srandmember(随机抽取，但不会移除元素)
+
+用法：srandmember  key 
+
+例：如图
+
+![Alt text](./images/redis/201807161445.png)
+
+
+
+
+2.5 sorted set（zset）类型
+
+sorted set是set的一个升级版，其增加了一个顺序属性。可以理解为两列的mysql,一列值，一列是顺序。操作中key为zset.
+
+zset也是string类型元素集合，但是每个元素会关联一个double类型的score。zset是实现skip list（是双向链表）和hash table的混合体。
+
+一般做索引，排序字段做score存储，对象id当元素存储。
+
+方法介绍：
+
+1）zadd(添加)
+
+用法：zadd key score value
+
+注：score为顺序，当value输入重复时，顺序为后一次排序。value不同，score可重复。（score可重复，value不可重复）
+
+
+例：如图
+
+![Alt text](./images/redis/201807161506.png)
+
+
+2）zrem(移除对应的value)
+
+用法：zrem key value
+
+例：如图
+
+![Alt text](./images/redis/201807161523.png)
+
+
+
+3）zincrby(对指定的value，将序号加入一定值)
+
+用法：zincrby key score（原序号基础上序号加score） value
+
+例：如图
+
+![Alt text](./images/redis/201807161616.png)
+
+
+4）zrank(取对应的value的下标（序号升序后）)
+
+用法：zrank key value
+
+注：此处不是序号，是下标，从0开始。
+
+例：如图
+
+![Alt text](./images/redis/201807161625.png)
+
+
+
+5）zrevrank(取对应的value的下标（序号降序后）)
+
+用法：zrevrank key value
+
+注：此处不是序号，是下标，从0开始。
+
+例：如图
+
+![Alt text](./images/redis/201807161632.png)
+
+
+6）zrevrange(按序号降序输出所有元素)
+
+用法：zrevrange key 0 -1 withscores
+
+例：如图
+
+![Alt text](./images/redis/201807166137.png)
+
+
+
+7）zrangebyscore(返回特定序号区间的值)
+
+用法：zrangebyscore key min max withscores
+
+注：不是序号
+
+例：如图
+
+![Alt text](./images/redis/201807161643.png)
+
+
+
+8）zcount(返回特定序号区间内元素数量)
+
+用法：zcount key min max
+ 
+注：不是序号
+
+例：如图
+
+![Alt text](./images/redis/201807161648.png)
+
+
+
+9）zcard(返回集合元素数量)
+
+用法：zcard key 
+
+例：如图
+
+![Alt text](./images/redis/201807161655.png)
+
+
+10）zscore(返回特定值对应的序号)
+
+用法：zscore key value
+
+例：如图
+
+![Alt text](./images/redis/201807161657.png)
+
+
+
+11）zremrangebyrank(删除特定区间的元素)
+
+用法：zremrangebyrank key start end
+
+注：不是序号
+
+例：如图
+
+![Alt text](./images/redis/201807161502.png)
+
+
+
+12）zremrangebyscore(删除特定序号之间的元素)
+
+用法：zremrangebyscore key start end
+
+例：如图
+
+![Alt text](./images/redis/201807161706.png)
+
+
+### 3 Redis常用命令
+
+3.1 键值相关命令
+
+1）keys
+
+满足给定pattern的所有key,*表示所有。也可以key*
+
+用法：keys * 
+
+例：如图
+
+![Alt text](./images/redis/201807161715.png)
+
+
