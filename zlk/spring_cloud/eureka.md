@@ -414,7 +414,7 @@ Instances currently registered with Eureka栏出现数据。如下图：
 
 启动后，进入测试。
 注册中心显示如下图：
-![Alt text](/images/eureka/201901071036.PNG)
+![Alt text](./images/eureka/201901071036.PNG)
 
 测试接口输入：http://localhost:8089/user/login。结果将轮番调用hello-service服务的8888与8800端口。
 
