@@ -169,7 +169,7 @@ Spring Could Eureka是Spring Could Netfix(核心组件)中的一部分，主要�
 
 配置完成后，启动EurekaApplication类main()方法。浏览器输入http://localhost:1111/，结果如下图。
 Instances currently registered with Eureka栏无数据。如下图：
-![Alt text](/images/eureka/201901031013.PNG)
+![Alt text](./images/eureka/201901031013.PNG)
 
 ### 3 注册服务提供者
 
@@ -232,10 +232,10 @@ Renews (last min)：上一分钟内收到的心跳次数。
 
 刷新注册中心http://localhost:1111/ ；
 Instances currently registered with Eureka栏出现数据。如下图：
-![Alt text](/images/eureka/201901131538.PNG)
+![Alt text](./images/eureka/201901131538.PNG)
 
 **此时如果关闭服务hello-service，注册中心显示服务还存在。当心跳时间达到时，加入自我保护模式，说明此时有服务挂掉。如下图：**
-![Alt text](/images/eureka/201901031549.PNG)
+![Alt text](./images/eureka/201901031549.PNG)
 
 ### 4 高可用注册中心
 将注册中心相互注册，它既是注册中心，也是服务提供者。考虑发生故障时。主要实现：
