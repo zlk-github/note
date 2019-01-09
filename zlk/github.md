@@ -180,3 +180,17 @@
 >>6、将修改后的代码提交的10-fixbug,并向master分支提交合并请求。请求合并成功后，关闭问题。
 
 
+	删除本地分支
+	命令行 : $ git branch -d <BranchName>
+
+	删除远程分支
+	命令行 : $ git push origin --delete <BranchName>
+
+	远程仓库删除文件 
+	$ git rm 我的文件
+
+	本地仓库删除文件夹 
+	$ git rm -r 我的文件夹/
+
+    撤销add
+    $ git reset HEAD <文件>
