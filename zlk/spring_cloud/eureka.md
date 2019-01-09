@@ -14,7 +14,7 @@
 6 总结
 
 ### 介绍：
-Spring Could Eureka是Spring Could Netfix(核心组件)中的一部分，主要负责微服务框架的服务治理功能。注册中心主要提供注册与发现功能，服务提供者提供服务，服务消费者消费服务。其具有Spring Boot风格的自动化配置。**该节主要为服务治理的简单搭建。相关配置详情见"Eureka配置详解"。**
+Spring Could Eureka是Spring Could Netfix(核心组件)中的一部分，主要负责微服务框架的服务治理功能。注册中心主要提供注册与发现功能，服务提供者提供服务，服务消费者消费服务。其具有Spring Boot风格的自动化配置。**该节主要为服务治理的简单搭建。相关配置详情见"Spring Could Eureka配置详解"。**
 
 服务端：注册中心注解：@EnableEurekaServer
 
