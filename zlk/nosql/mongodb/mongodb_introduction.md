@@ -1,4 +1,8 @@
-## Mongodb
+## Mongodb入门介绍
+
+安装步骤见："windows7下MongoDB的安装"
+
+### 介绍
 Mongodb 中集合类似于关系型数据库中的表，文档类似于行。
 格式类似于json的key/value;
 key必须是字符串，value可以string，int，float，timestamp，binary 等类型。
@@ -15,10 +19,14 @@ key必须是字符串，value可以string，int，float，timestamp，binary 等
 
 5BSON 数据格式非常适合文档化格式的存储及查询。
 
-**不适合场景：**
+不适合场景：
 
 1高度事务性的系统。
 
 2传统的商业智能应用。
 
 3需要SQL 的问题。
+
+### 权限设置
+
+### 简例
