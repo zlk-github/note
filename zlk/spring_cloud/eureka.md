@@ -1,4 +1,5 @@
-## 服务治理：Spring Could Eureka
+## 1 服务治理：Spring Could Eureka
+
 ### 目录：
 
 1 服务治理
@@ -112,7 +113,7 @@ Spring Could Eureka是Spring Could Netfix(核心组件)中的一部分，主要�
 				<dependency>
 					<groupId>org.springframework.cloud</groupId>
 					<artifactId>spring-cloud-dependencies</artifactId>
-					<version>Finchley.BUILD-SNAPSHOT</version><!--spring boot 2.0 与1.0 配置时需要选择对应版本-->
+					<version>Finchley.RELEASE</version><!--spring boot 2.0 与1.0 配置时需要选择对应版本-->
 					<type>pom</type>
 					<scope>import</scope>
 				</dependency>
