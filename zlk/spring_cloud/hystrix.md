@@ -185,6 +185,7 @@ Spring Could Hystrix是基于Netfix的开源框架，用于解决调用故障或
 	        return "我是一个消费者去调用==》"+restTemplate.getForEntity("http://hello-service/user/login",String.class);
 	    }
 	
+		//注：回退方法的返回类型与参数需要与目标方法一致
 	    public String notFindFallback()
 	    {
 	        return "error";

@@ -63,7 +63,7 @@ getForEntity函数，方法返回ResponseEntity,该对象是String对HTTP请求�
 	（2）
     注：也可以使用下面这种方式，服务提供者需要使用@RequestParam注解接收参数
 
-	服务提供，使用map传参
+	服务消费，使用map传参
 	Map<String, Object> requestMap = Maps.newHashMap();
     requestMap.put("name", "123456");
     requestMap.put("password", "xiao ming");
