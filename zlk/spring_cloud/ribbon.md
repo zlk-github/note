@@ -1,4 +1,4 @@
-## 2 客户端负载均衡：Spring Could Ribbon
+## 2 客户端负载均衡：Spring Cloud  Ribbon
 
 ### 目录
 
@@ -10,11 +10,11 @@
 
 ### 介绍
 
-Spring Could Ribbon是一个基于HTTP和TCP的客户端负载均衡工具，基于Netfix Ribbon实现。通过Spring Cloud封装，将面向服务的REST模板请求自动转换为客户端负载均衡的服务调用。
+Spring Cloud  Ribbon是一个基于HTTP和TCP的客户端负载均衡工具，基于Netfix Ribbon实现。通过Spring Cloud封装，将面向服务的REST模板请求自动转换为客户端负载均衡的服务调用。
 
 负载均衡：按一定的算法获取服务器清单地址中的一个，进行转发。（服务消费端需要用到）
 
-Spring Could Ribbon客户端负载均衡：
+Spring Cloud  Ribbon客户端负载均衡：
 
 1. 服务提供者启动多个服务实例并注册到注册中心（单注册中心或者高可用注册中心）；
 2. 服务消费者直接调用@LoadBalanced注解修饰过的RestTemplate来实现面向服务的接口调用。
@@ -209,11 +209,11 @@ public void delete() {
 
 ### 总结
 
-Spring Could Ribbon结合Spring Could Eureka可以完成消费者调服务提供者的负载均衡。但是同时使用，默认服务列表由Eureka维护。如果需要重定义Ribbon的一些参数，需要重写覆盖方法（如2.1中所示）。Eureka牺牲一定的一致性,故需要重试机制。
+Spring Cloud  Ribbon结合Spring Cloud  Eureka可以完成消费者调服务提供者的负载均衡。但是同时使用，默认服务列表由Eureka维护。如果需要重定义Ribbon的一些参数，需要重写覆盖方法（如2.1中所示）。Eureka牺牲一定的一致性,故需要重试机制。
 
 ### 参考：
 
-	1 《Spring Could 微服务实战》 翟永超 电子工业出版社 2017.5
+	1 《Spring Cloud  微服务实战》 翟永超 电子工业出版社 2017.5
 
     参考网站：http://blog.didispace.com/Spring-Cloud基础教程/
              https://springcloud.cc/spring-cloud-netflix.html

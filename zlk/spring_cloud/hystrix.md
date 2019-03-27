@@ -1,4 +1,4 @@
-## 3 服务容错保护：Spring Could Hystrix
+## 3 服务容错保护：Spring Cloud Hystrix
 
 ### 目录
 
@@ -8,7 +8,7 @@
 
 ### 介绍
 
-Spring Could Hystrix是基于Netfix的开源框架，用于解决调用故障或者延迟。Hystrix具备服务降级、服务熔断、线程和信号隔离、请求缓存、请求合并以及服务监控等强大功能。
+Spring Cloud Hystrix是基于Netfix的开源框架，用于解决调用故障或者延迟。Hystrix具备服务降级、服务熔断、线程和信号隔离、请求缓存、请求合并以及服务监控等强大功能。
 
 ### 1 Hystrix搭建
 
@@ -193,7 +193,7 @@ Spring Could Hystrix是基于Netfix的开源框架，用于解决调用故障或
 	}
 	
 
-**注：注册中心与负载均衡配置见 "1 服务治理：Spring Could Eureka"	**
+**注：注册中心与负载均衡配置见 "1 服务治理：Spring Cloud Eureka"	**
 
 第一步：启动注册中心，端口1111
 
@@ -228,7 +228,7 @@ Hystrix的隔离策略有两种：线程隔离（THREAD）和信号量隔离（S
 
 ### 参考：
 
-	1 《Spring Could 微服务实战》 翟永超 电子工业出版社 2017.5
+	1 《Spring Cloud 微服务实战》 翟永超 电子工业出版社 2017.5
 
     参考网站：http://blog.didispace.com/Spring-Cloud基础教程/
 			https://springcloud.cc

@@ -1,4 +1,4 @@
-## Spring Could Eureka配置详解
+## Spring Cloud  Eureka配置详解
 
 ### 目录
 1 instance：当前Eureka Instance实例信息配置
@@ -9,7 +9,7 @@
 
 4 dashboard：Eureka Server注册中心仪表盘配置
 
-5 Spring Could Eureka常用配置清单
+5 Spring Cloud  Eureka常用配置清单
 
 ### 介绍
 
@@ -99,7 +99,7 @@ Eureka Server的配置全部以eureka.server.xxx的格式进行配置。
 
 注册中心仪表盘的配置主要是控制注册中心的可视化展示。以eureka.dashboard.xxx的格式配置。 
 
-### 5 Spring Could Eureka常用配置清单 
+### 5 Spring Cloud  Eureka常用配置清单 
              
 清单来源：https://www.cnblogs.com/li3807/p/7282492.html（致谢）  
 
