@@ -1,14 +1,21 @@
-## 4 声明式调用：Spring Cloud Feign
+## 5 API网关服务：Spring Cloud Zuul（过滤器重新加）
+
+### 目录
+
+1 入门配置
+
+参考
+
 
 ### 介绍
 
-Spring Cloud Feign基于Netfix Feign实现，整合了Spring Cloud Ribbon 和Spring Cloud Hustrix。另外还提供一种声明式的web服务客户端定义形式。简化我Spring Cloud Ribbon的封装。
+对外提供服务，管理**路由（具体url去哪个服务）与规则维护**，对所有微服务的校验进行前置（如用户校session校验，**过滤器**与拦截器等）
 
-### 1 Spring Cloud Feign 入门
-
-**版本：spring boot 2.0.1+spring cloud （Finchley）**
+### 1 入门配置
 
 **1.1** pom.xml
+
+添加spring-cloud-starter-netflix-zuul。添加spring-cloud-starter-netflix-eureka-server整合eureka。
 
 	<?xml version="1.0" encoding="UTF-8"?>
 	<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -35,17 +42,15 @@ Spring Cloud Feign基于Netfix Feign实现，整合了Spring Cloud Ribbon 和Spr
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-starter</artifactId>
 			</dependency>
-	
-			<!--euraka 2.0注册中心-->
+			<!--注册中心-->
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
 			</dependency>
 	
-			<!--feign-->
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-starter-openfeign</artifactId>
+				<artifactId>spring-cloud-starter-netflix-zuul</artifactId>
 			</dependency>
 	
 			<dependency>
@@ -84,28 +89,38 @@ Spring Cloud Feign基于Netfix Feign实现，整合了Spring Cloud Ribbon 和Spr
 	
 	</project>
 
-**1.2** application.properties
 
-	# 端口
-	server.port= 8089
-	# 服务名称
-	spring.application.name=feign-customer
+**1.2**application.properties
+
+**多实例配置**：zuul.routes.<route>.path与zuul.routes.<route>.serviceId
+其中如果请求服务配置了上下文（如server.servlet.context-path=/feign），则route必须和上下文一致。且path中路由规则也得也route一致。
+
+注：如果服务配置了上下文，需要配置zuul.routes.feign.stripPrefix=false，否则路径中会缺少上下文路由，导致路径404.
+
+
+	spring.application.name=zuul
+	server.port=3001
 	
 	eureka.instance.instanceId=${spring.cloud.client.ip-address}:${server.port}
-	# 实例名称instanceId允许ip显示
 	eureka.instance.preferIpAddress=true
 	
-	#将服务hello-service 注册到 http://localhost:1111/eureka/
+	#传统式
+	#zuul.routes.feign.path=/feign/**
+	#zuul.routes.feign.url=/feign//loclhost:8087
+	
+	#面向服务
+	#stripPrefix=true(默认true。如果请求服务有上下文路由时，选择false不去前缀,且有前缀时route与path对应为服务的路由)会去除前缀,
+	zuul.routes.feign.stripPrefix=false
+	zuul.routes.feign.path=/feign/**
+	zuul.routes.feign.serviceId=feign-customer
+	
 	eureka.client.serviceUrl.defaultZone=http://localhost:1111/eureka/
 
-**1.3** 启动类
+**1.3** 启动类Application
+   
+加@EnableZuulProxy注解。
 
-使用@EnableFeignClients注解开启feign
-
-	//feign
-	@EnableFeignClients
-	//服务发现
-	@EnableDiscoveryClient
+	@EnableZuulProxy
 	@SpringBootApplication
 	public class DemoApplication {
 	
@@ -115,56 +130,20 @@ Spring Cloud Feign基于Netfix Feign实现，整合了Spring Cloud Ribbon 和Spr
 	
 	}
 
-**1.4** UserService接口
+**1.4** 测试
 
-定义一个接口，使用注解@FeignClient绑定服务名。
+测试前启动注册中心、服务与Zuul。如下图
 
-	@FeignClient("hello-service")//指定服务hello-service
-	public interface UserService {
-	
-	    /**
-	     *  hello-service服务对应接口/user/login
-	     *  若有参数使用@RequestBody绑定对象，
-	     *  @RequestParam或者@RequestHeader指定参数名绑定普通参数
-	     */
-	    @RequestMapping("/user/login")
-	    public String login();
-	}
+![Alt text](./images/zuul/euerka.png)
 
-**1.5** UserController类
 
-	@RestController
-	@RequestMapping("/user")
-	public class UserController {
-	    private Logger logger = Logger.getLogger(getClass());
-	
-	    @Autowired
-	    private UserService userService;
-	
-	    @RequestMapping("login")
-	    public String login(){
-	        return  userService.login();
-	    }
-	}
+输入一个存在的url：localhost:3001/feign/user/login
 
-**启动服务注册中心，启动两个服务名称hello-service的服务（端口8088,8087）。浏览器输入http://localhost:8089/user/login；此时将循环访问hello-service服务的8088与8087端口。实现与ribbon一致的负载均衡效果。**
+![Alt text](./images/zuul/post_login.png)
 
-验证前截图：
 
-![Alt text](./images/feign/initial.PNG)
+### 参考
 
-### 2 接口绑定
-
-若有参数使用@RequestBody绑定对象，@RequestParam或者@RequestHeader指定参数名绑定普通参数
-
-### 3 继承特性
-
-将公用实体bean与Server接口封装到api，但是要严格参照开闭原则。
-
-### 参考：
-
-	1 《Spring Cloud 微服务实战》 翟永超 电子工业出版社 2017.5
+	1 《Spring Cloud  微服务实战》 翟永超 电子工业出版社 2017.5
 
     参考网站：http://blog.didispace.com/Spring-Cloud基础教程/
-			https://springcloud.cc
-			https://springcloud.cc/spring-cloud-netflix.html
