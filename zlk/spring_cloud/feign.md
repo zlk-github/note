@@ -151,7 +151,7 @@ Spring Cloud Feign基于Netfix Feign实现，整合了Spring Cloud Ribbon 和Spr
 
 验证前截图：
 
-![Alt text](./images/feign/initial.PNG)
+88
 
 ### 2 接口绑定
 
