@@ -23,7 +23,7 @@ mysql数据库，测试表结构如下。并插入数据。
 项目结构如下：
 
 ![Alt text](./images/structure.png)
-
+ 
 注：启动类默认放com包下，即最外层。否则需要添加注解去扫包。
 
 **2.1** pom.xml
