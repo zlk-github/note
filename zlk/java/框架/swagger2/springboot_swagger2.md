@@ -34,7 +34,7 @@ Swagger 是一个规范和完整的框架，用于生成、描述、调用和可
 	
 	    <artifactId>springfox-swagger2</artifactId>
 	
-	    <version>2.2.2</version>
+	    <version>2.8.0</version>
 	
 	</dependency>
 	
@@ -44,7 +44,7 @@ Swagger 是一个规范和完整的框架，用于生成、描述、调用和可
 	
 	    <artifactId>springfox-swagger-ui</artifactId>
 	
-	    <version>2.2.2</version>
+	    <version>2.8.0</version>
 	
 	</dependency>
 
