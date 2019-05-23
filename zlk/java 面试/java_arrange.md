@@ -192,7 +192,8 @@
 
 ### 5 集合
 
-参考：https://blog.csdn.net/zhangqunshuai/article/details/80660974#commentBox；https://blog.csdn.net/feiyanaffection/article/details/81394745#commentBox
+参考：https://blog.csdn.net/zhangqunshuai/article/details/80660974#commentBox；https://blog.csdn.net/feiyanaffection/article/details/81394745#commentBox；
+https://www.cnblogs.com/chengxiao/p/6059914.html
 
 **5.1 概述**
 
@@ -304,6 +305,7 @@ hibernate二级缓存
 
 ### Object 方法
 
+### IOC控制反转（容器）与AOP面向切面
 
 ###  mybatis #与$
 

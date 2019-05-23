@@ -2,7 +2,7 @@
 
 ### 1 选择排序
 
-n个记录的直接选择排序可经过n-1趟直接选择排序得到有序结果。（有序集 || 无序集） --不稳定（值相同时会出现）
+n个记录的直接选择排序可经过n-1趟直接选择排序得到有序结果。（有序集 || 无序集） --不稳定（值相同时会出现）o(n^2)
 
 **描述**：首先在未排序序列找到一个最小值，并将其存放在排序序列的第一个位置。接着从未排序序列中找到一个最小值将其放入排序序列的末尾。依次类推，直到序列排序完毕。（**当未排序序列中首位置不是最小时，将其与最小值的位置做交互，其余元素位置不变**）
 
@@ -129,4 +129,100 @@ n个记录的直接选择排序可经过n-1趟直接选择排序得到有序结�
 
 ### 2 插入排序
 
-描述：默认序列
+n个记录的直接选择排序可经过n-1趟直接选择排序得到有序结果。 o(n^2)   --（稳定）
+
+**描述：**默认第一个位置为有序，从第二个位置开始。每次取当前位置元素和前面元素相比。 如果当前元素比前面元素小，则交换位置。如果当前元素大于或者等于前一个元素则插入位置。 依次类推直到元素序列完全有序。(**插入时，前面元素是有序的**) 
+
+
+例：6  , 5   ,3  , 4 ,  7  （ || 后面第一个元素是下一次需要插入的元素）
+
+	第一次（6和5交换）     			 ：  5   6   ||   3    4   7
+	第二次（6和3交换，后5后3交换）     ：  3   5   6   ||    4   7
+	第三次（4和6交换，后4后5交换）     ：  3   4   5    6   ||   7
+	第四次（7不变）    			  ：  3   4   5    6    7   ||
+
+
+**算法实现**：
+
+	/**插入排序
+	 * @author  zhoulk
+	 * date: 2019/5/20 0020
+	 */
+	public class InsertSort {
+	
+	    public static void main(String[] args) {
+	        Integer[] array = RandomArray.getArray(1, 1000, 5000);
+	        SelectSort<Integer[]> selectSort = new SelectSort();
+	
+	        //选择排序
+	      /*  Long startTime = System.currentTimeMillis();
+	        Integer[] returnArr = selectSort.sortAll(array);
+	        Long endTime = System.currentTimeMillis();
+	        System.out.println("花费时间："+(float)(endTime-startTime)/1000+"秒");*/
+	
+	        //插入排序
+	        sort(array);
+	        //sortOptimize(array);
+	        for (Integer v:array) {
+	            System.out.println(v+",");
+	        }
+	        /*Long startTime1 = System.currentTimeMillis();
+	        Integer[] returnArr1 = selectSort.sortAll(array);
+	        Long endTime1 = System.currentTimeMillis();
+	        System.out.println("花费时间："+(float)(endTime1-startTime1)/1000+"秒");*/
+	    }
+	
+	    /**
+	     * 插入排序优化（小到大） -- 找到具体位置后再直接交换，需要靠后的数据顺移
+	     * @param arr 排序数组
+	     */
+	    public static void sortOptimize(Integer[] arr){
+	        for (int i = 1; i <arr.length ; i++) {
+	            //记录当前值需要插入的位
+	            int temp = arr[i] ;
+	            int j;
+	            for(j = i;j >0&&arr[j-1]>temp;j--){
+	                arr[j] = arr[j-1];
+	            }
+	            arr[j] = temp;
+	        }
+	    }
+	
+	    /**
+	     * 插入排序（小到大）--需要多次交换位置
+	     * @param arr 排序数组
+	     */
+	    public static void sort(Integer[] arr){
+			//首位有序
+	        for (int i = 1; i <arr.length ; i++) {
+	            int temp;
+	            for(int j = i;j >0&&arr[j]<arr[j-1];j--){
+	                temp = arr[j];
+	                arr[j] = arr[j-1];
+	                arr[j-1] = temp;
+	            }
+	        }
+	    }
+	}
+
+
+### 3 冒泡排序
+
+o(n^2)   --（稳定）
+
+例：6  , 5   ,3  , 4 ,  7  （ || 后面第一个元素是下一次需要插入的元素）
+
+	第一次     ：  5   3   4    6    ||   7
+	第二次     ：  3   4   5   ||    6    7
+	第三次     ：  3   4   ||   5    6    7
+	第四次     ：  3   ||   4   5    6    7  
+	第四次     ： ||   3    4   5    6    7  
+
+
+**描述：**比较相邻的元素。如果第一个比第二个大，就交换他们两个。
+
+对每一对相邻元素做同样的工作，从开始第一对到结尾的最后一对。在这一点，最后的元素应该会是最大的数。
+
+针对所有的元素重复以上的步骤，除了最后一个。
+
+持续每次对越来越少的元素重复上面的步骤，直到没有任何一对数字需要比较。
