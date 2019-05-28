@@ -101,7 +101,7 @@
 **3.4 synchronized与volatile**
 
 	1、共享内存 ——— 隐式通信 volatile 
-	2、 消息传递 ——— 显示通信 synchronized / lock
+	2、消息传递 ——— 显示通信 synchronized / lock
 
     synchronized：通过锁住共享内存空间的方式。线程A先锁住内存空间，修改完值后将值放入内存，释放锁。此时线程B才能获取值。可以用在变量、方法、类、同步代码块等，性能低。能保证可见性、原子性、有序性。
 
@@ -274,10 +274,7 @@ https://www.cnblogs.com/chengxiao/p/6059914.html
 
 	父类不同：Hashtable的父类是Dictionary，HashMap的父类是AbstractMap
 
-
-### 6 JVM
-
-### 7 hibernate三状态与二级缓存
+### 6 hibernate三状态与二级缓存
 
 hibernate对象的三种状态：（session即一级缓存,一级缓存请求内存，没有的话在请求数据库；）  
 
@@ -291,38 +288,535 @@ hibernate二级缓存
 
 	二级缓存请求内存，没有在请求二级缓存区，没有在请求数据库；(很少修改的数据放二级缓存，类似于Redis缓存)
 
-### 8 Redis
+### 7 Redis
 
 类型：String、List、Hash、Set、sort Set。
 
-开发中长用于数据缓存。
+开发中长用于数据缓存。缓存时注解上的key+value构成键。
 
-### 垃圾回收
+### 8 JVM与垃圾回收
 
-### 封装、继承、多态
+（参考https://blog.csdn.net/aijiudu/article/details/72991993）
 
-### 接口、抽象类（继承与抽象，子类.....）
+JVM被分为三个主要的子系统
 
-### Object 方法
+	（1）类加载器子系统（2）运行时数据区（3）执行引擎
 
-### IOC控制反转（容器）与AOP面向切面
+**8.1 运行时数据区**
 
-###  mybatis #与$
+	Java的动态类加载功能是由类加载器子系统处理。当它在运行时（不是编译时）
+	首次引用一个类时，它加载、链接并初始化该类文件
 
-### 算法
+	加载包含：启动类加载器 (BootStrap class Loader)、扩展类加载器(Extension class Loader)和应用程序类加载器(Application class Loader)
 
-### sql优化
+**8.2 运行时数据区**
 
-###  java8新特性
+	方法区（静态成员方法区）：存放类级别共享资源。如静态变量。每个JVM只有一个方法区。
+	
+	堆区:所有对象、实例变量、数组。多线程共享，不安全。
+   
+    栈区：存放局部变量，对象引用等。
+   
+    PC寄存器：存放当前执行指令地址。
 
-### negix
+    本地方法栈（native）：保存本地方法信息。
 
-### spring cloud 与Dubbo
+**8.3 执行引擎**
 
-### IO
+	分配给运行时数据区的字节码将由执行引擎执行。执行引擎读取字节码并逐段执行。
 
-### solr
+    包含：解释器、编译器、垃圾回收器、Java本地接口 (JNI)、本地方法库。
 
-### hadoop
+**垃圾回收：**
 
-### 项目描述
+	收集并删除未引用的对象。可以通过调用"System.gc()"来触发垃圾回收，但并不保证会确实进行
+	垃圾回收。JVM的垃圾回收只收集哪些由new关键字创建的对象。所以，如果不是用new创建的对
+	象，你可以使用finalize函数来执行清理
+
+
+### 9 java异常
+
+**9.1 Java异常机制**
+
+关键字：try、catch、finally、throw、throws。
+
+	• try        -- 用于监听。将要被监听的代码(可能抛出异常的代码)放在try语句块之内，当try语句块内发生异常时，异常就被抛出。
+	• catch   -- 用于捕获异常。catch用来捕获try语句块中发生的异常。
+	• finally  -- finally语句块总是会被执行。它主要用于回收在try块里打开的物力资源(如数据库连接、网络连接和磁盘文件)。只有finally块，执行完成之后，才会回来执行try或者catch块中的return或者throw语句，如果finally中使用了return或者throw等终止方法的语句，则就不会跳回执行，直接停止。
+	• throw   -- 用于抛出异常。
+	• throws -- 用在方法签名中，用于声明该方法可能抛出的异常。
+
+**9.2 异常分类**
+
+	1. Throwable
+	　　Throwable是 Java 语言中所有错误或异常的超类。
+	　　Throwable包含两个子类: Error 和 Exception。它们通常用于指示发生了异常情况。
+	　　Throwable包含了其线程创建时线程执行堆栈的快照，它提供了printStackTrace()等接口用于获取堆栈跟踪数据等信息。
+	
+	2. Exception
+	　　Exception及其子类是 Throwable 的一种形式，它指出了合理的应用程序想要捕获的条件。
+	
+	3. RuntimeException 
+	　　RuntimeException是那些可能在 Java 虚拟机正常运行期间抛出的异常的超类。
+	　　编译器不会检查RuntimeException异常。例如，除数为零时，抛出ArithmeticException异常。RuntimeException是ArithmeticException的超类。当代码发生除数为零的情况时，倘若既"没有通过throws声明抛出ArithmeticException异常"，也"没有通过try...catch...处理该异常"，也能通过编译。这就是我们所说的"编译器不会检查RuntimeException异常"！
+	　　如果代码会产生RuntimeException异常，则需要通过修改代码进行避免。例如，若会发生除数为零的情况，则需要通过代码避免该情况的发生！
+	
+	4. Error
+	　　和Exception一样，Error也是Throwable的子类。它用于指示合理的应用程序不应该试图捕获的严重问题，大多数这样的错误都是异常条件。
+	　　和RuntimeException一样，编译器也不会检查Error。
+	
+	
+	Java将可抛出(Throwable)的结构分为三种类型：被检查的异常(Checked Exception)，运行时异常(RuntimeException)和错误(Error)。
+	
+	(01) 运行时异常
+	定义: RuntimeException及其子类都被称为运行时异常。
+	特点: Java编译器不会检查它。也就是说，当程序中可能出现这类异常时，倘若既"没有通过throws声明抛出它"，也"没有用try-catch语句捕获它"，还是会编译通过。例如，除数为零时产生的ArithmeticException异常，数组越界时产生的IndexOutOfBoundsException异常，fail-fail机制产生的ConcurrentModificationException异常等，都属于运行时异常。
+	　　虽然Java编译器不会检查运行时异常，但是我们也可以通过throws进行声明抛出，也可以通过try-catch对它进行捕获处理。
+	　　如果产生运行时异常，则需要通过修改代码来进行避免。例如，若会发生除数为零的情况，则需要通过代码避免该情况的发生！
+	
+	(02) 被检查的异常
+	定义: Exception类本身，以及Exception的子类中除了"运行时异常"之外的其它子类都属于被检查异常。
+	特点: Java编译器会检查它。此类异常，要么通过throws进行声明抛出，要么通过try-catch进行捕获处理，否则不能通过编译。例如，CloneNotSupportedException就属于被检查异常。当通过clone()接口去克隆一个对象，而该对象对应的类没有实现Cloneable接口，就会抛出CloneNotSupportedException异常。
+	　　被检查异常通常都是可以恢复的。
+	
+	(03) 错误
+	定义: Error类及其子类。
+	特点: 和运行时异常一样，编译器也不会对错误进行检查。
+	　　当资源不足、约束失败、或是其它程序无法继续运行的条件发生时，就产生错误。程序本身无法修复这些错误的。例如，VirtualMachineError就属于错误。
+	　　按照Java惯例，我们是不应该是实现任何新的Error子类的！
+
+**9.3 常见运行时异常**
+
+	ArithmeticException：数学计算异常。
+	NullPointerException：空指针异常。
+	NegativeArraySizeException：负数组长度异常。
+	ArrayOutOfBoundsException：数组索引越界异常。
+	ClassNotFoundException：类文件未找到异常。
+	ClassCastException：类型强制转换异常。
+	SecurityException：违背安全原则异常。
+
+**9.4 非RuntimeException类型**
+
+	NoSuchMethodException：方法未找到异常。
+	IOException：输入输出异常。
+	EOFException：文件已结束异常。
+	FileNotFoundException：文件未找到异常。
+	NumberFormatException：字符串转换为数字异常。
+	SQLException：操作数据库异常
+
+
+### 10 封装、继承、多态
+
+![Alt text](./images/xsf.png)
+	
+	封装：可以隐藏实现细节，使得代码模块化；将数据抽象后进行封装，包含数据与方法封装。
+
+	继承：可以扩展已存在的代码模块（类）；它们的目的都是为了——代码重用。继承是指这样一种能力，它可以使用现有类的所有功能，并在无需重新编写原来的类的情况下对这些功能进行扩展。其继承的过程，就是从一般到特殊的过程。
+
+	多态：则是为了实现另一个目的————接口重用！
+	a. 继承的存在(继承是多态的基础,没有继承就没有多态). 
+	b. 子类重写父类的方法(多态下调用子类重写的方法). 
+	c. 父类引用变量指向子类对象(子类到父类的类型转换).
+
+### 11 重写和重载
+
+	重载：（Overload）是让类以统一的方式处理不同类型数据的一种手段，实质表现就是多个具有不同
+	的参数个数或者类型的同名函数（返回值类型可随意，不能以返回类型作为重载函数的区分标准）
+	同时存在于同一个类中，是一个类中多态性的一种表现（调用方法时通过传递不同参数个数和参数
+	类型来决定具体使用哪个方法的多态性）。
+
+	重写：（Override）是父类与子类之间的多态性，实质是对父类的函数进行重新定义，如果在子类中定义
+	某方法与其父类有相同的名称和参数则该方法被重写，不过子类函数的访问修饰权限不能小于父类的；
+	若子类中的方法与父类中的某一方法具有相同的方法名、返回类型和参数表，则新方法将覆盖原有的方
+	法，如需父类中原有的方法则可使用 super 关键字。 
+
+
+### 12 接口、抽象类（继承与抽象，子类.....）
+
+	1.语法层面上的区别
+	　　1）抽象类可以提供成员方法的实现细节，而接口中只能存在public abstract 方法（JDK1.8之前）；
+	　　2）抽象类中的成员变量可以是各种类型的，而接口中的成员变量只能是public static final类型的；
+	　　3）接口中不能含有静态代码块以及静态方法，而抽象类可以有静态代码块和静态方法；
+	　　4）一个类只能继承一个抽象类，而一个类却可以实现多个接口。
+
+    2.设计层面上的区别
+		1）抽象类是对一种事物的抽象，即对类抽象，而接口是对行为的抽象。
+		2）设计层面不同，抽象类作为很多子类的父类，它是一种模板式设计。而接口是一种行为规范，它是一种辐射式设计。
+
+### 13 Object 方法
+
+clone(),equals(),finalize(),getClass(),hashCode(),notify(),notifyAll(),toString()
+,wait()
+
+	protected Object   clone()创建并返回此对象的一个副本。   
+	boolean   equals(Object obj)指示其他某个对象是否与此对象“相等”。   
+	protected void   finalize()当垃圾回收器确定不存在对该对象的更多引用时，由对象的垃圾回收器调用此方法。   
+	Class<?>   getClass()返回此 Object 的运行时类。   
+	int   hashCode()返回该对象的哈希码值。   
+	void   notify()唤醒在此对象监视器上等待的单个线程。   
+	void   notifyAll()唤醒在此对象监视器上等待的所有线程。   
+	String   toString()返回该对象的字符串表示。   
+	void   wait()在其他线程调用此对象的 notify() 方法或 notifyAll() 方法前，导致当前线程等待。   
+	void   wait(long timeout)在其他线程调用此对象的 notify() 方法或 notifyAll() 方法，或者超过指定的时间量前，导致当前线程等待。   
+	void   wait(long timeout, int nanos)在其他线程调用此对象的 notify() 方法或 notifyAll() 方法，或者其他某个线程中断当前线程，或者已超过某个实际时间量前，导致当前线程等待。
+
+### 14 IOC控制反转（容器）与AOP面向切面
+
+（AOP、IOC参考:https://blog.csdn.net/bestone0213/article/details/47424255；https://blog.csdn.net/gloomy_114/article/details/68946881）
+
+	依赖注入(DI)是控制反转(IOC)的一种方式，但现在大家默认控制反转等同于依赖注入.控制反转是一种设计思想。
+	控制反转：控制反转是指spring容器通过依赖注入的方式使得创建依赖对象的控制权由对象转移到spring容器。（即对象不是由我们自己主动创建（new），而是由IOC容器控制。作用是解耦）
+	
+	面向切面编程，往往被定义为促使软件系统实现关注点的分离的技术。系统是由许多不同的组件所组成的，每一个组件各负责一块特定功能。除了实现自身核心功能之外，这些组件还经常承担着额外的职责。
+	例如日志、事务管理和安全这样的核心服务经常融入到自身具有核心业务逻辑的组件中去。这些系统服务经常被称为横切关注点，因为它们会跨越系统的多个组件。
+
+###  15 mybatis #与$
+
+sql注入：name=anything' OR 'x'='x   ；'x'='x  恒为真。推荐#。
+
+	$：是不安全的，是可以注入的，性能比较低，是经常用来拼接sql语句的，不建议用来做传值的传递参数。
+	
+	'#'：#{}会被替换为?号,有占位符的效果。是安全的，可以防止注入的，且编译采用Prestatement的机制，性能比较高，是传递字符串的 
+
+
+### 16 sql优化
+
+### 17 jdbc
+
+**17.1 jdbc工具类**
+
+	public class JdbcUtil {
+		
+		private static final String driver = getValue("jdbc.driver");
+		private static final String url = getValue("jdbc.url");;
+		private static final String user = getValue("jdbc.username");;
+		private static final String password = getValue("jdbc.password");;
+	
+		static{
+			// 加载驱动
+					try {
+
+                        //oracle.jdbc.driver.OracleDriver; com.mysql.jdbc.Driver
+						Class.forName(driver);
+					} catch (ClassNotFoundException e) {
+					System.out.println("加载驱动失败！"+e.getMessage());
+					}
+		}
+		
+		/**
+		 * 连接数据库对象
+		 * @return Connection 连接对象
+		 */
+		public static Connection getConnection(){
+			Connection conn = null;
+			try {
+				//jdbc:oracle:thin:@localhost:1521:ORCL; jdbc:mysql://@localhost:3306/dbName
+				conn = DriverManager.getConnection(url, user, password);
+			} catch (SQLException e) {
+				System.out.println("数据库连接失败！"+e.getMessage());
+			}
+			return conn;		
+		}
+		
+		/**获取文件中的数据库连接配置信息
+		 * @param key 键
+		 * @return 值
+		 */
+		private static String getValue(String key){
+			//方式一：
+			//ResourceBundle bundle = ResourceBundle.getBundle("jdbc");
+			//return bundle.getString(key);	
+			InputStream in = JdbcUtil.class.getResourceAsStream("/jdbc.properties");
+			Properties properties = new Properties();
+			try {
+				properties.load(in);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return properties.getProperty(key);
+		}
+		
+		/**
+		 * 关闭连接
+		 * @param conn 连接对象
+		 * @param stmt 创建sql语句对象
+		 * @param rs 执行sql语句对象
+		 */
+		public static void close(Connection conn ,Statement stmt,ResultSet rs){
+			try {
+				if(rs!=null){
+				rs.close();
+				}
+				if(stmt!=null){
+				stmt.close();
+				}
+				if(conn!=null){
+				conn.close();
+				}
+			} catch (SQLException e) {
+				System.out.println("关闭资源失败！"+e.getMessage());
+			}
+		}
+		
+		public static void main(String[] args) {
+			System.out.println(getConnection());
+		}
+			
+	}
+
+17.2 非预编译查询
+
+	public Employee findByPK(Integer empno1){
+			Connection conn = JdbcUtil.getConnection();
+			Statement stmt = null;
+			ResultSet rs ;
+			Employee emp = null;
+			String sql = "select * from myemp where empno="+empno1;
+			System.out.println(sql);
+			try {
+				 stmt = conn.createStatement();
+				 rs = stmt.executeQuery(sql);
+				 while(rs.next()){
+						Integer empno = rs.getInt("empno");
+						String ename = rs.getString("ename");
+						String job = rs.getString("job");
+						Integer mgr = rs.getInt("mgr");
+						Date hiredate = rs.getDate("hiredate");
+						Double sal = rs.getDouble("sal");
+						Double comm = rs.getDouble("comm");
+						Integer deptno = rs.getInt("deptno");
+	
+						emp = new Employee(empno, ename, job, mgr, hiredate,
+								sal, comm, deptno);
+				 }
+				 
+			} catch (SQLException e) {
+				System.out.println("没有此员工！");
+				return null;	
+			}
+			return emp;	
+		}
+
+17.3 预编译
+
+	public void update(Employee emp) throws DataAccessExcption{
+		Connection conn = JdbcUtil.getConnection();
+		StringBuffer sql = new StringBuffer("update myemp set ename=? hiredate=?  where empno=?");
+		PreparedStatement ps = null;
+		try {
+			 ps = conn.prepareStatement(sql.toString());
+			 int i = 1;
+			 //setObject(i++, 值);
+			 ps.setObject(i++, emp.getEname());
+			 //加sql
+			 ps.setObject(i++, new java.sql.Date(emp.getHiredate().getTime()));
+			 ps.setObject(i++, emp.getEmpno());
+			 System.out.println(sql.toString());
+			 //不要sql
+			 int row = ps.executeUpdate();
+			 System.out.println("更新成功！");	 
+		} catch (SQLException e) {
+			throw new DataAccessExcption();
+		}finally{
+			try {
+				ps.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			JdbcUtil.close(conn,null, null);
+		}		
+	}
+
+### 18 分页sql
+
+mysql分页
+
+	select * from users limit 0,10 -- (0为第一条，取第一条开始，一共取10条)
+
+oracle分页
+
+	select * from (select r.*,rownum rn  from (select * from users) r where rownum<=10) a where a.rn>0  --（查询起始1，结束10。共10条）
+
+### 19 算法
+
+
+### 20 java8新特性
+
+**一 Lambda表达式**
+
+Lambda表达式可以说是Java 8最大的卖点，她将函数式编程引入了Java。Lambda允许把函数作为一个方法的参数，或者把代码看成数据。
+	
+	Arrays.asList( "p", "k", "u","f", "o", "r","k").forEach( e -> System.out.println( e ) );
+
+**二 接口的默认方法与静态方法**
+
+我们可以在接口中定义默认方法，使用default关键字，并提供默认的实现。所有实现这个接口的类都会接受默认方法的实现，除非子类提供的自己的实现。例如：
+
+	public interface DefaultFunctionInterface {
+	     default String defaultFunction() {
+	         return "default function";
+	     }
+	}
+
+我们还可以在接口中定义静态方法，使用static关键字，也可以提供实现。例如：
+	
+	public interface StaticFunctionInterface {
+	     static String staticFunction() {
+	         return "static function";
+	     }
+	}
+
+**三 方法引用**
+
+通常与Lambda表达式联合使用，可以直接引用已有Java类或对象的方法。一般有四种不同的方法引用：
+	
+	构造器引用。语法是Class::new，或者更一般的Class< T >::new，要求构造器方法是没有参数；
+	
+	静态方法引用。语法是Class::static_method，要求接受一个Class类型的参数；
+	
+	特定类的任意对象方法引用。它的语法是Class::method。要求方法是没有参数的；
+	
+	特定对象的方法引用，它的语法是instance::method。要求方法接受一个参数，与3不同的地方在于，3是在列表元素上分别调用方法，而4是在某个对象上调用方法，将列表元素作为参数传入；
+
+**四、重复注解**
+
+在Java 5中使用注解有一个限制，即相同的注解在同一位置只能声明一次。Java 8引入重复注解，这样相同的注解在同一地方也可以声明多次。重复注解机制本身需要用@Repeatable注解。Java 8在编译器层做了优化，相同注解会以集合的方式保存，因此底层的原理并没有变化。
+
+**五、扩展注解的支持**
+
+Java 8扩展了注解的上下文，几乎可以为任何东西添加注解，包括局部变量、泛型类、父类与接口的实现，连方法的异常也能添加注解。
+
+**六、Optional**
+
+Java 8引入Optional类来防止空指针异常，Optional类最先是由Google的Guava项目引入的。Optional类实际上是个容器：它可以保存类型T的值，或者保存null。使用Optional类我们就不用显式进行空指针检查了。
+
+**七、Stream**
+
+Stream API是把真正的函数式编程风格引入到Java中。其实简单来说可以把Stream理解为MapReduce，当然Google的MapReduce的灵感也是来自函数式编程。她其实是一连串支持连续、并行聚集操作的元素。从语法上看，也很像linux的管道、或者链式编程，代码写起来简洁明了，非常酷帅！
+
+**八、Date/Time API** (JSR 310)
+
+Java 8新的Date-Time API (JSR 310)受Joda-Time的影响，提供了新的java.time包，可以用来替代 java.util.Date和java.util.Calendar。一般会用到Clock、LocaleDate、LocalTime、LocaleDateTime、ZonedDateTime、Duration这些类，对于时间日期的改进还是非常不错的。
+
+**九、JavaScript引擎Nashorn**
+
+Nashorn允许在JVM上开发运行JavaScript应用，允许Java与JavaScript相互调用。
+
+**十、Base64**
+
+在Java 8中，Base64编码成为了Java类库的标准。Base64类同时还提供了对URL、MIME友好的编码器与解码器。
+
+除了这十大新特性之外，还有另外的一些新特性：
+
+	更好的类型推测机制：Java 8在类型推测方面有了很大的提高，这就使代码更整洁，不需要太多的强制类型转换了。
+	
+	编译器优化：Java 8将方法的参数名加入了字节码中，这样在运行时通过反射就能获取到参数名，只需要在编译时使用-parameters参数。
+	
+	并行（parallel）数组：支持对数组进行并行处理，主要是parallelSort()方法，它可以在多核机器上极大提高数组排序的速度。
+	
+	并发（Concurrency）：在新增Stream机制与Lambda的基础之上，加入了一些新方法来支持聚集操作。
+	
+	Nashorn引擎jjs：基于Nashorn引擎的命令行工具。它接受一些JavaScript源代码为参数，并且执行这些源代码。
+	
+	类依赖分析器jdeps：可以显示Java类的包级别或类级别的依赖。
+	
+	JVM的PermGen空间被移除：取代它的是Metaspace（JEP 122）。
+
+### 21 negix
+
+（https://blog.csdn.net/wchengsheng/article/details/79930858）
+
+### 22 spring cloud
+
+https://blog.csdn.net/qq_42629110/article/details/84963815
+
+	维度(SpringCloud)
+		服务开发
+			SpringBoot
+			Spring
+			SpringMVC
+		服务配置与管理
+			Netfilx公司的Archaiusm,阿里的Diamond
+		服务注册与发现
+			Eureka,ZooKeeper
+		服务调用
+			Rest,RPC,gRPC
+		服务熔断器
+			Hystrix
+		服务负载均衡
+			Ribbon,Nginx
+		服务接口调用
+			Feign
+		消息队列
+			Kafka,RabbitMq,ActiveMq
+		服务配置中心管理
+			SpringCloudConfing
+		服务路由(API网关)
+			Zuul
+		事件消息总线
+			SpringCloud Bus
+
+**分布式事务**（https://blog.csdn.net/zyndev/article/details/79604395#commentBox）
+	
+	基于XA协议的两阶段提交
+	消息事务+最终一致性（目前处理分布式主流方案tcc及消息的最终一致性）
+	TCC编程模式
+	LCN（推荐）：强一致性方案，github上较为流行的tx-lcn分布式处理框架，它是基于redis的一种补偿型处理方案。（https://blog.csdn.net/zhangxing52077/article/details/81587988）
+
+**分布式锁**
+
+（https://www.jianshu.com/p/68a1c094b639）
+
+基于数据库、基于redis、基于ZooKeeper。
+
+### 23 Dubbo
+
+(https://blog.csdn.net/Y0Q2T57s/article/details/83005376#commentBox)
+
+**23.1 Dubbo是什么？**
+	
+	Dubbo是阿里巴巴开源的基于 Java 的高性能 **RPC 分布式服务框架**，现已成为 Apache 基金会孵化项目。
+
+**23.2 为什么要用Dubbo？**
+	
+	因为是阿里开源项目，国内很多互联网公司都在用，已经经过很多线上考验。内部使用了 Netty、Zookeeper，保证了高性能高可用性。
+	
+	使用 Dubbo 可以将核心业务抽取出来，作为独立的服务，逐渐形成稳定的服务中心，可用于提高业务复用灵活扩展，使前端应用能更快速的响应多变的市场需求。
+
+**23.3 Dubbo 和 Spring Cloud 有什么区别？**
+
+	两个没关联，如果硬要说区别，有以下几点。
+	
+	1）通信方式不同
+	Dubbo 使用的是 RPC 通信，而 Spring Cloud 使用的是 HTTP RESTFul 方式。
+	2）组成部分不同
+
+![Alt text](./images/dubbo.png)
+......
+
+### 24 IO
+
+![Alt text](./images/io.png)
+
+
+### 25 solr
+
+(https://blog.csdn.net/lihang_1994/article/details/72599449)
+
+Solr 是Apache下的一个顶级开源项目，采用Java开发，它是基于Lucene的全文搜索服务器。Solr提供了比Lucene更为丰富的查询语言，同时实现了可配置、可扩展，并对索引、搜索性能进行了优化。
+
+### 26 ES
+
+### 27 hadoop
+
+### 28 项目描述
+
+
+======================================
+##非重要部分
+
+### 1 EJB
+
+将类打包到服务器，让客户端调。
