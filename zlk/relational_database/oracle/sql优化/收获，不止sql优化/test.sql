@@ -1,201 +1,156 @@
-##########Oracle优化相关《收获，不止SQL优化》#############
+#########################收获，不止sql优化###################################
 
-#########第三章 sql执行计划###################
+########################第八章 索引优化######################################
 
-#用户下所有表生成统计数据(未测试通)
-DBMS_STATS.GATHER_TABLE_STATS('zhoulk11', 'EXAMINATION');
+##3索引本身有序之order by
 
-##1统计表记录数
-select t.TABLE_NAME,t.NUM_ROWS,t.BLOCKS,t.LAST_ANALYZED from user_tables t where table_name in('USERS','EXAMINATION')
+  drop index idx1_t7_id2
+  
+  select *  from t7 order by id2 --27.176s
+  select id2 from t7  order by id2 --12.356s
+  select id,id2 from t7 order by id2 --11.529s
+  select * from t7 where id2 >0 order by id2 --27.3s
+  select * from t7 where id2 >0 and id2<10000 order by id2 --12.012
+  select * from t7 where id2=3 order by id2 --12.3s
+	 
+	create index idx1_t7_id2 on t7(id2)
+  
+	select * from t7  order by id2  --25.586s
+  select id2 from t7  order by id2 --0.452s
+  select id,id2 from t7 order by id2 --11.435s
+  select * from t7 where id2 >0 and id2<1000000 order by id2 --0.032s
+  select * from t7 where id2 =3 order by id2 --0.031s
 
-select * from EXAMINATION
+##4索引有序优化max与min
 
-##2 explain plan for 
- 
-explain plan for SELECT * FROM EXAMINATION e where exam_no='43a0a467ef6b432f99260e2b863f82eb' and exam_name='Maven测试'
+drop index idx1_t7_id2 
+  
+select max(id2) from t7   --12.309s
+select min(id2) from t7   --12.169s
+select max(id2),min(id2) from t7   --12.465s
+select a.max,b.min from (select max(id2) max from t7) a,(select min(id2) min from t7 ) b --22.573s
 
- select * from table(dbms_xplan.display());
- 
- ##3  set autotrace on(未测试通过)
- 
- set autotrace on SELECT * FROM EXAMINATION e；
+create index idx1_t7_id2 on t7(id2)
+  
+select max(id2) from t7 --0.608s
+select min(id2) from t7   --0.436s
+select max(id2),min(id2) from t7   --1.279s
+select a.max,b.min from (select max(id2) max from t7) a,(select min(id2) min from t7 ) b --0.031
 
-##4 statistics_level=all
+## 5分页索引优化
+drop index idx_id_id2;
 
-alter session set statistics_level=all;
+select count (*) from t7  --12.136s
+select count (*) from t7 where id>20 and id<20000 --0.473s
+select count (1) from t7 --11.778s
+select count (id2) from t7 --0.472s
 
- SELECT * FROM user_tables e ;
- 
- SELECT * FROM EXAMINATION e ;
- 
- select * from table(dbms_xplan.display_cursor(null,null,'allstats last'));
- 
- ##4 dbms_xplan.display_cursor
- #查询sql_id
- select * from v$sql where last_active_time >=to_date('2019-05-24 11:00:00','yyyy-MM-dd HH24:MI:SS') and last_active_time <=to_date('2019-05-24 15:00:00','yyyy-MM-dd HH24:MI:SS') ;
- 
- select * from table(dbms_xplan.display_cursor('aq8yqxyyb40nn',0));
- 
-  select * from table(dbms_xplan.display_cursor('aq8yqxyyb40nn'));
+select * from (select r.*,rownum rn  from (select * from t7) r where rownum<=10) a where a.rn>0 --0.031s
+select * from (select r.*,rownum rn  from (select * from t7) r where rownum<=900010 ) a where a.rn>900000 --10.92s
+select * from (select r.*,rownum rn  from (select id,id2 from t7 ) r where rownum<=900010  ) a where a.rn>900000--10.655s
 
-##3.5事件10046trace追踪
+create index idx_id_id2 on t7(id,id2);
 
-##3.6awrsqrpt.sql
+select * from (select r.*,rownum rn  from (select * from t7) r where rownum<=10) a where a.rn>0 --0.031s
+select * from (select r.*,rownum rn  from (select * from t7 ) r where rownum<=900010 ) a where a.rn>900000 --9.92s
+select * from (select r.*,rownum rn  from (select id,id2 from t7 ) r where rownum<=900010  ) a where a.rn>900000--1.046s
 
-#########第四章 左右 sql执行计划###################
 
-##1HINT
 
-##(1)子查询
-##grant all on scott.dept to zhoulk11;
-drop table emp purge;
-create table emp as select * from scott.emp;
-create index idx_emp_deptno on emp(deptno);
-create index idx_emp_empno on emp(empno);
-drop table dept purge;
-create table dept as select * from scott.dept;
-create index idx_dept_deptno on dept(deptno);
+select * from  t7 where id2>20 and id2<21 and id>1; --0.764s
+select * from  t7 where id2 in(20,21) and id>1; --0.187s
 
- explain plan for select * from emp
+## 6 组合索引
+
+create table t as select * from dba_objects; 
+select * from t  --50912行
+
+drop index idx_id_type;
+drop index idx_type_id;
+
+select * from t where  object_id=20  and object_type='TABLE'; --0.031s
+select * from  t where object_id>20 and object_id<2000 and object_type='TABLE'; --0.047s
+
+create index idx_id_type on t(object_id,object_type);
+
+select * from t where  object_id=20  and object_type='TABLE'; --0.031s
+select * from  t where object_id>20 and object_id<2000 and object_type='TABLE'; --0.047s
+
+
+drop index idx_type_id;
+select * from  t where object_id>20 and object_id<21 and object_type='TABLE'; --0.015s
+select * from  t where object_id in(20,21) and object_type='TABLE'; --0.032s
+
+create index idx_type_id on t(object_type,object_id);
+
+select * from  t where object_id>20 and object_id<200000 and object_type='TABLE'; 
+
+select * from  t where object_id>20 and object_id<21 and object_type='TABLE'; --0.015s
+select * from  t where object_id in(20,21) and object_type='TABLE'; --0.032s
+
+
+select * from (select r.*,rownum rn  from (select * from t ) r where rownum<=50010  ) a where a.rn>50000
+####################################执行计划，和统计信息####################
+##执行计划
+explain plan for select * from t 
+
 select * from table(dbms_xplan.display());
 
-################# 第七章 表设计优化#####################
+## 统计信息
+select * from t 
 
-##1范围分区
-create table range_part_tab(
-       id number not null primary key,
-       deal_date date not null,
-       area_code number(3) not null,
-       contents varchar2(4000)
-)
-partition by range(deal_date)
-(
-          partition p1 values less than (to_date('2015-02-01','YYYY-MM-DD' )),
-          partition p2 values less than (to_date('2015-03-01','YYYY-MM-DD')),
-          partition p3 values less than (to_date('2015-04-01','YYYY-MM-DD')),
-          partition p4 values less than (to_date('2015-05-01','YYYY-MM-DD')),
-          partition p5 values less than (to_date('2015-06-01','YYYY-MM-DD')),
-          partition p6 values less than (to_date('2015-07-01','YYYY-MM-DD')),
-          partition p7 values less than (to_date('2015-08-01','YYYY-MM-DD')),
-          partition p8 values less than (to_date('2015-09-01','YYYY-MM-DD')),
-          partition p9 values less than (to_date('2015-10-01','YYYY-MM-DD')),
-          partition p10 values less than (to_date('2015-11-01','YYYY-MM-DD')),
-          partition p11 values less than (to_date('2015-12-01','YYYY-MM-DD')),
-          partition p12 values less than (to_date('2016-01-01','YYYY-MM-DD')),
-          partition p_max values less than (maxvalue)
-);
+select *  from v$sql where sql_text like '%select * from t %';
 
-insert into range_part_tab (id,deal_date,area_code,contents)  
-select rownum ,
-             to_date(to_char(sysdate-365,'J')+Trunc(Dbms_Random.value(0,356)),'J'),
-             ceil(dbms_random.value(590,599)),
-             rpad('*',400,'*')
-from dual
-connect by rownum <=100000    
+## 通过sqlID
+select * from table(dbms_xplan.display_cursor('6qu70hus7qc3x',0,'allstats last'))
 
-insert into range_part_tab (id,deal_date,area_code,contents)  values(100003,to_date('2015-11-01','YYYY-MM-DD'),598,'*********');
+############################################################################
 
-select *   from range_part_tab partition(p1) ;
+#######################第十一章 表连接 、 第十二章 等价改写###########################
 
-select * from range_part_tab
-select count(1) from range_part_tab
+##表准备
 
-##列表分区
-create table list_part_tab(
-       id number not null primary key,
-       deal_date date not null,
-       area_code number(3) not null,
-       contents varchar2(4000)
-)
-partition by list(area_code)
-(
-          partition p_591 values (591),
-          partition p_592 values (592),
-          partition p_593 values  (593),
-          partition p_594 values  (594),
-          partition p_595 values  (595),
-          partition p_596 values  (596),
-          partition p_597 values  (597),
-          partition p_598 values  (598),
-          partition p_599 values  (599),
-          partition p_other values (DEFAULT)
-);
-
-insert into list_part_tab (id,deal_date,area_code,contents)  
-select rownum ,
-             to_date(to_char(sysdate-365,'J')+Trunc(Dbms_Random.value(0,356)),'J'),
-             ceil(dbms_random.value(590,599)),
-             rpad('*',400,'*')
-from dual
-connect by rownum <=100000  
-
-select *   from list_part_tab partition(p_592) ;
-
-select *   from list_part_tab where area_code=592 ;
-         
-##比较
-create table part_tab(
-       id number not null primary key,
-       deal_date date not null,
-       area_code number(3) not null,
-       contents varchar2(4000)
+##学生表
+create table student(
+       id integer  not null primary key, -- 主键id,学号
+       s_name varchar2(100) not null, --姓名
+       birthday date not null, --生日
+       sex integer  default  1, --1男，2女
+       s_desc varchar2(1000) --描述
 )
 
-insert into part_tab (id,deal_date,area_code,contents)  
-select rownum ,
-             to_date(to_char(sysdate-365,'J')+Trunc(Dbms_Random.value(0,356)),'J'),
-             ceil(dbms_random.value(590,599)),
-             rpad('*',400,'*')
-from dual
-connect by rownum <=100000
+select count(1) from student t
+
+select * from student t
+
+delete from student
+
+insert into student values(1,'Tom', to_date ( '2007-11-15' , 'YYYY-MM-DD' ),1,'miaoshu' )
+##课程表
+create table course(
+       id integer not null primary key, -- 主键id
+       c_name  varchar2(100)  not null  --课程名称
+)
+
+## 选修成绩表
+create table Grade(
+       s_id integer not null , -- 学号
+       c_id integer not null, -- 课程id
+       score  number(4,1) , --成绩
+       primary key(s_id,c_id)
+)
+
+create sequence stu_squ
+minvalue 1
+maxvalue 20000000
+start with 1
+increment by 1
+nocache;
+
+drop sequence    stu_squ
 
 
 
-explain plan for 
-select *  from range_part_tab 
-where deal_date >=to_date('2015-08-04','YYYY-MM-DD')
-             and deal_date <=to_date('2015-08-07','YYYY-MM-DD')
-             
-select * from table(dbms_xplan.display());
-
-explain plan for 
-select *  from part_tab 
-where deal_date >=to_date('2015-08-04','YYYY-MM-DD')
-             and deal_date <=to_date('2015-08-07','YYYY-MM-DD')
-             
-select * from table(dbms_xplan.display());
-
-######################第八章 索引######################
-create table t1 as select rownum as id,rownum+1 as id2,rpad('*',1000,'*') as contents from dual connect by level<=1;
-create table t2 as select rownum as id,rownum+1 as id2,rpad('*',1000,'*') as contents from dual connect by level<=10;
-create table t3 as select rownum as id,rownum+1 as id2,rpad('*',1000,'*') as contents from dual connect by level<=100;
-create table t4 as select rownum as id,rownum+1 as id2,rpad('*',1000,'*') as contents from dual connect by level<=1000;
-create table t5 as select rownum as id,rownum+1 as id2,rpad('*',1000,'*') as contents from dual connect by level<=10000;
-create table t6 as select rownum as id,rownum+1 as id2,rpad('*',1000,'*') as contents from dual connect by level<=100000;
-create table t7 as select rownum as id,rownum+1 as id2,rpad('*',1000,'*') as contents from dual connect by level<=1000000;
-
-create index idx_id_t1 on t1(id);
-create index idx_id_t2 on t2(id);
-create index idx_id_t3 on t3(id);
-create index idx_id_t4 on t4(id);
-create index idx_id_t5 on t5(id);
-create index idx_id_t6 on t6(id);
-create index idx_id_t7 on t7(id);
-
-select * from t1
-select * from t2
-select * from t3
-select * from t4
-select * from t5
-select * from t6
-select * from t7 where id =1
-select /*+full(t1)*/ * from t7 where id =1
-
-select us.index_name,us.blevel,us.LEAF_BLOCKS,us.NUM_ROWS,us.DISTINCT_KEYS,us.CLUSTERING_FACTOR
- from user_ind_statistics us where us.table_name in('T1','T2','T3','T4','T5','T6','T7')
- 
- 
-select * from DBA_TABLES
 
 
-select * from (select r.*,rownum rn  from (select * from users) r where rownum<=4) a where a.rn>0
+

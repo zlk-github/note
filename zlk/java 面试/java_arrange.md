@@ -1,4 +1,4 @@
-##
+## java 整理
 
 ### 1 Spring MVC
 
@@ -639,6 +639,15 @@ oracle分页
 
 	select * from (select r.*,rownum rn  from (select * from users) r where rownum<=10) a where a.rn>0  --（查询起始1，结束10。共10条）
 
+mogodb分页
+
+	 1.db.myCollection.find().sort({"ID":1}).skip(10).limit(10)命令，将其根据ID排序后，跳过10，查询10条，结果为10-19条的数据。
+	
+	 2.db.getCollection('personas').find({"_id":{"$gt":NumberLong(10000000)}}).sort({"_id":1}).limit(50)
+
+solr分页
+
+
 ### 19 算法
 
 
@@ -813,10 +822,60 @@ Solr 是Apache下的一个顶级开源项目，采用Java开发，它是基于Lu
 
 ### 28 项目描述
 
+### 30 java创建对象的方式
+	
+	使用 new 关键字（最常用）：
+	        ObjectName obj = new ObjectName();
+	
+	使用反射的Class类的newInstance()方法：
+	        ObjectName obj = ObjectName.class.newInstance();
+	
+	使用反射的Constructor类的newInstance()方法：
+	        ObjectName obj = ObjectName.class.getConstructor.newInstance();
+	
+	使用对象克隆clone()方法：
+	        ObjectName obj = obj.clone();
+	
+	使用反序列化（ObjectInputStream）的readObject()方法：
+	        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(FILE_NAME))) {
+	
+	            ObjectName obj = ois.readObject();
+	
+	        }
+
+
 
 ======================================
 ##非重要部分
 
-### 1 EJB
+### 1 分数最大/时间最大
 
-将类打包到服务器，让客户端调。
+SELECT * FROM  (select user_name, max(score) score  from answer group by user_name ) a
+,answer s where a.user_name=s.user_name and s.score = a.score
+
+
+=========================================
+## 前端部分
+
+### 1 JSP共有以下9大内置对象：
+
+	out   向客户端输出数据，作用域：page
+	request   发送请求或得到相应，作用域：request
+	response   封闭了JSP 的响应，然后被发送到客户端以响应客户的请求，作用域：page
+	session  会话，用来保存用户信息，作用域：session
+	pageContext   本JSP的页面上下文。作用域：page
+	application   作用域：application
+	config   作用域：page
+	page   作用域：page
+	exception   作用域：page
+
+### 2jsp标签库
+
+	动态引入
+    <jsp:include page="relativeURL | <%=expression%>" flush="true|false" />
+
+	转发
+	<jsp:forward page="relativeURL | <%=expression%>" /> 
+
+###
+
