@@ -481,6 +481,8 @@ sql注入：name=anything' OR 'x'='x   ；'x'='x  恒为真。推荐#。
 
 ### 16 sql优化
 
+https://my.oschina.net/u/3728166/blog/2875720
+
 ### 17 jdbc
 
 **17.1 jdbc工具类**
@@ -843,6 +845,17 @@ Solr 是Apache下的一个顶级开源项目，采用Java开发，它是基于Lu
 	
 	        }
 
+### 31 kafka 
+
+https://www.jianshu.com/p/65a8acc48da5
+
+### 32 zookpeer
+
+https://segmentfault.com/a/1190000014479433
+
+### 33 mongodb
+
+https://www.jianshu.com/p/4521f9aa7355
 
 
 ======================================
