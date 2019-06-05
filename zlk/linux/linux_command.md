@@ -191,6 +191,8 @@ touch 文件名
 	 -rw-r--r--. 1 root root 0 5月  14 18:04 myFile.txt
 	[root@localhost opt]# 
 
+注：创建文件并写入内容：echo 内容 >文件
+
 
 **3.2 删除文件rm**
 
@@ -341,6 +343,24 @@ rm [选项] 文件
 	例如： kill -9 [PID]
 	 -9 表示强迫进程立即停止
 	通常用 ps 查看进程 PID ，用 kill 命令终止进程
+
+**4.4 赋予文件夹权限**
+
+	chmod 777 *
+
+**4.5 切换root**
+
+	su root 
+
+**4.6 命令管理员权限sudo**
+
+	例：sudo nginx (管理员权限启动nginx)
+
+**4.7 显示文件一定行的内容**
+
+	1. 从第1000行开始，显示2000行。即显示1000~2999行
+	
+	cat input_file | tail -n +1000 | head -n 2000
 
 ### 5 vi常用
 
