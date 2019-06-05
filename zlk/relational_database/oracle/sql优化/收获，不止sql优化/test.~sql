@@ -140,6 +140,47 @@ create table Grade(
        primary key(s_id,c_id)
 )
 
+##########################################################################
+create table grade_table2(
+       id integer not null , 
+       s_id integer not null , -- 学号
+       c_name varchar2(50)  not null, -- 课程名称
+       score  number(4,1) , --成绩
+       primary key(id)
+)
+
+
+
+insert into grade_table2(id,c_name,score) values(1001,20141001,'语文',90);
+insert into grade_table2(id,c_name,score) values(1002,20141001,'英语',85);
+insert into grade_table2(id,c_name,score) values(1003,20141001,'数学',70);
+
+insert into grade_table2(id,c_name,score) values(1004,20141002,'语文',80);
+insert into grade_table2(id,c_name,score) values(1005,20141002,'英语',98);
+insert into grade_table2(id,c_name,score) values(1006,20141002,'数学',77);
+
+
+create table grade_table(
+       id integer not null , 
+       chinese  number(4,1) not null , --中文成绩
+       english  number(4,1) not null , -- 英语成绩
+       math  number(4,1) not null  , --数学成绩
+       primary key(id)
+)
+
+insert into grade_table(id,chinese,english,math) values(1001,90,80,60);
+insert into grade_table(id,chinese,english,math) values(1002,91,70,59);
+
+select 
+id,
+case  when chinese>=90 then '优秀' when chinese>=80 then '良好' when chinese>=70 then '中等' when chinese>=60 then '及格'  else '不及格' end as 语文,
+case  when english>=90 then '优秀' when english>=80 then '良好' when english>=70 then '中等' when english>=60 then '及格'  else '不及格' end as 英语,
+case  when math>=90 then '优秀' when math>=80 then '良好' when math>=70 then '中等' when math>=60 then '及格'  else '不及格' end as 数学
+from grade_table
+
+
+
+
 create sequence stu_squ
 minvalue 1
 maxvalue 20000000
