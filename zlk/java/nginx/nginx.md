@@ -43,7 +43,7 @@ nginx是一个web服务器，通常用来实现服务器的反向代理。
 	2.保证内网安全，隐藏服务器信息，防止web攻击。
 
 
-### 2 nginx 常用命令
+### 2 nginx 常用命令（linux）
 
 默认端口80，配置文件nginx.conf，成功日志access.log，失败日志error.log。
 
@@ -69,6 +69,8 @@ nginx是一个web服务器，通常用来实现服务器的反向代理。
 	或者
 	netstat -ntpl | grep 80
 
+	sudo netstat -antup|grep PID号
+
 2.5 查看nginx版本
 
 	sudo nginx -v
@@ -77,6 +79,8 @@ nginx是一个web服务器，通常用来实现服务器的反向代理。
 
 	sudo nginx -t
 
+
+**以下测试都是在windows系统测试。**
 
 ### 3 nginx 配置文件说明
 
@@ -151,15 +155,15 @@ nginx.conf说明。
 	        }
 			
 			#2静态资源F:/static下
-			location ~ .*\.（js|css|png|gif）$ {  
+			location  ~ .*\.(jpg|jpeg|gif|png|ico|css|js|pdf|txt)$ {  
 	            root F:/static;
 	        }
 			
 			#3图片服务器
-			location /images（js|css|png|gif）$ {  
+			location /images/ {  
 	            root F:/web;
 				#开启图片浏览功能
-				auto index on;
+				autoindex on;
 	        }
 			
 			#4后台代理，前端访问目录名称
@@ -180,7 +184,7 @@ nginx.conf说明。
 
 
 
-### 4 nginx做http服务器
+### 4 nginx做http服务器（反向代理）
 
 每台物理服务器划分为多个虚拟服务器，每个虚拟主机对应一个web站点。其实就是一台服务器搭建了多个网站。
 
@@ -192,64 +196,52 @@ nginx.conf说明。
 	
 	3.域名区分（实际网站中常用，需要花钱买域名。在该处使用将域名加到hosts文件的方式，只能用于本地测试）
 
-下面测试
+**主要配置**：
 
-主要配置：
-
-server {
-	    #侦听端口，默认80
+ 	server {
         listen       80;
-		#域名，实际中需要申请。该处测试的时候可以在在hosts中加 (127.0.0.1  www.zlk.com)，127.0.0.1为服务器地址，可以根据服务器地址配置。
-
-        server_name  www.zlk.com;
-		#编码格式
+        server_name  www.vue.com;
 		charset utf-8;
 
-		#虚拟主机日志
         #access_log  logs/host.access.log  main;
 
-		#1前台代理，访问http://localhost时访问D:\Test\vue\vue1\dist\index.html
+		#前端代理。可以是地址，也可以使用tomcat
         location / {
-            root	 D:\Test\vue\vue1\dist;
-            index  	 index.html;
+            root	F:/git/nose/antd-demo/dist;
+            index  	index.html;
         }
 		
-        error_page  404   /404.html;
+        error_page  404              /404.html;
+        error_page   500 502 503 504  /50x.html;
         location = /50x.html {
             root   html;
         }
-	}
+    }
 
+在hosts中加入www.vue.com的DNS；
+
+访问www.vue.com，将转向F:/git/nose/antd-demo/dist/index.html;(以上dist是一个vue项目npm run build后得到)
 
 ### 5 nginx 做图片服务器
 
-需要ftp或者sftp.
+linux下需要ftp或者sftp进行上传.
 
-  server {
+	server {
 		    #侦听端口，默认80
 	        listen       80;
 			#域名，实际中需要申请。该处测试的时候可以在在hosts中加 (ip localhost)
-	        server_name  localhost;
+	        server_name  www.vue.com;
 			#编码格式
 			charset utf-8;
 	
 			#虚拟主机日志
 	        #access_log  logs/host.access.log  main;
-	
-			#前台代理，访问http://localhost时进入前端目录入口D:\Test\vue\vue1\dist\index.html
-	        location / {
-	            root	 D:\Test\vue\vue1\dist;
-	            index  	 index.html;
+			
+		    #4后台代理，前端访问目录名称
+			location ^~ /test/ {
+			    #server_test对应upstream server_test
+				proxy_pass   http://server_test/test/; 
 	        }
-			
-			
-			#图片服务器
-			location /images（js|css|png|gif）$ {  
-	            root F:/web;
-				#开启图片浏览功能
-				auto index on;
-	        }
-			
 			
 	        error_page  404   /404.html;
 	        location = /50x.html {
@@ -258,10 +250,59 @@ server {
 		}
 	}
 
-### 6 反向代理配置
+访问http://www.vue.com:8088/images/favicon.ico （F:/web/images/favicon.ico）
 
 
 ### 7 负载均衡
 
+下面展示当前端请求www.vue.com/test/.....相关接口时，转发到127.0.0.1:8088或者127.0.0.1:8089下。
+
+如有接口：http://localhost:8089/user/login 
+
+    #后台请求ip配置
+	upstream server_test {
+		ip_hash;
+		server 127.0.0.1:8088 weight 2;#weight权重
+		server 127.0.0.1:8089 weight 1;
+	}
+
+    server {
+	    #侦听端口，默认80
+        listen       80;
+		#域名，实际中需要申请。该处测试的时候可以在在hosts中加 (ip localhost)
+        server_name  www.vue.com;
+		#编码格式
+		charset utf-8;
+
+		#虚拟主机日志
+        #access_log  logs/host.access.log  main;
+
+		#1前台代理，访问http://localhost时进入前端目录入口D:\Test\vue\vue1\dist\index.html
+        location / {
+            root	 D:\Test\vue\vue1\dist;
+            index  	 index.html;
+        }
+		
+		#4后台代理，前端访问目录名称
+		location ^~ /test/ {
+		    #server_test对应upstream server_test
+			proxy_pass   http://server_test/; 
+        }
+		
+		#400错误页面
+        error_page  404   /404.html;
+        #500错误页面
+        location = /50x.html {
+            root  html;
+        }
+	}
+
+
+
 ### 8 高并发
 
+1.做负载均衡（集群）
+
+2.资源动静分离（静态资源由nginx提供，动态资源由tomcat提供）
+
+3.
