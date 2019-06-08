@@ -194,3 +194,8 @@
 
     撤销add
     $ git reset HEAD <文件>
+
+
+查看冲突
+
+	$ git diff
