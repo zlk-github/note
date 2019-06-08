@@ -1,4 +1,26 @@
-## Nginx
+## Nginx 常用技术
+
+###目录
+
+1 nginx介绍
+
+2 nginx 常用命令（linux）
+
+3 nginx 配置文件说明
+
+4 nginx做http服务器（反向代理）
+
+5 nginx 做图片服务器
+
+7 负载均衡
+
+8 动静分离
+
+9 高并发
+
+总结
+
+
 
 ### 1 nginx介绍
 
@@ -129,59 +151,59 @@ nginx.conf说明。
 		#开启gzip压缩
 	    #gzip  on;
 		
-		#后台请求ip配置
 		upstream server_test {
-			ip_hash;
-			server 127.0.0.1:8088 weight 2;#weight权重
-			server 127.0.0.1:8089 weight 1;
+			#加ip_hash后当前用户的请求只能去同一个服务。
+			#ip_hash;
+			server 10.0.0.11:9090 down;#down 表示单前的server暂时不参与负载.
+			#weight权重，max_fails ：允许请求失败的次数默认为1.当超过最大次数时，返回proxy_next_upstream 模块定义的错误.fail_timeout : max_fails次失败后，暂停的时间。
+			server 127.0.0.1:1111 weight=4 max_fails=3 fail_timeout=0s;
+			server 127.0.0.1:8089 weight=1 max_fails=3 fail_timeout=0s;
+			server 127.0.0.1:8088 backup;#backup： 其它所有的非backup机器down或者忙的时候，请求backup机器。所以这台机器压力会最轻。
 		}
-	
-		#虚拟主机配置
-	    server {
-		    #侦听端口，默认80
+		
+	   server {
 	        listen       80;
-			#域名，实际中需要申请。该处测试的时候可以在在hosts中加 (ip localhost)
-	        server_name  localhost;
-			#编码格式
+	        server_name  www.vue.com;
 			charset utf-8;
 	
-			#虚拟主机日志
 	        #access_log  logs/host.access.log  main;
 	
-			#1前台代理，访问http://localhost时进入前端目录入口D:\Test\vue\vue1\dist\index.html
+			#1前端代理。可以是地址(项目地址G:/git/antd-demo/dist，dist 为Vue项目build后)，也可以使用tomcat
 	        location / {
-	            root	 D:\Test\vue\vue1\dist;
-	            index  	 index.html;
+	            root	G:/git/antd-demo/dist;
+	            index  	index.html;
 	        }
 			
-			#2静态资源F:/static下
-			location  ~ .*\.(jpg|jpeg|gif|png|ico|css|js|pdf|txt)$ {  
-	            root F:/static;
-	        }
-			
-			#3图片服务器
+		   #2图片服务器，图片地址G:/web/images/下
 			location /images/ {  
-	            root F:/web;
+				root G:/web;
 				#开启图片浏览功能
 				autoindex on;
-	        }
+			}
 			
-			#4后台代理，前端访问目录名称
+			#3后台代理，前端访问目录名称。前端访问接口前加www.vue.com/test，如http://www.vue.com/test/user/login?'+new Date().getTime()
 			location ^~ /test/ {
 			    #server_test对应upstream server_test
-				proxy_pass   http://server_test/test/; 
+				proxy_pass   http://server_test/; 
+				
+				#连接时间超时时间设置
+				#proxy_connect_timeout       1;
+				#proxy_read_timeout          1;
+				#proxy_send_timeout          1;
 	        }
 			
-			#400错误页面
-	        error_page  404   /404.html;
-	        #500错误页面
+			#4静态资源F:/static下
+			location  ~ .*\.(jpg|jpeg|gif|png|ico|css|js|pdf|txt)$ {  
+				root G:/web/static;
+			}
+		
+	        error_page  404              /404.html;
+	        error_page   500 502 503 504  /50x.html;
 	        location = /50x.html {
-	            root  html;
+	            root   html;
 	        }
 		}
 	}
-
-
 
 
 ### 4 nginx做http服务器（反向代理）
@@ -205,9 +227,9 @@ nginx.conf说明。
 
         #access_log  logs/host.access.log  main;
 
-		#前端代理。可以是地址，也可以使用tomcat
+		#前端代理。可以是地址(项目地址G:/git/antd-demo/dist，dist 为Vue项目build后)，也可以使用tomcat
         location / {
-            root	F:/git/nose/antd-demo/dist;
+            root	G:/git/antd-demo/dist;
             index  	index.html;
         }
 		
@@ -220,11 +242,11 @@ nginx.conf说明。
 
 在hosts中加入www.vue.com的DNS；
 
-访问www.vue.com，将转向F:/git/nose/antd-demo/dist/index.html;(以上dist是一个vue项目npm run build后得到)
+访问www.vue.com，将转向G:/git/antd-demo/dist/index.html;(以上dist是一个vue项目npm run build后得到)
 
 ### 5 nginx 做图片服务器
 
-linux下需要ftp或者sftp进行上传.
+（linux下需要ftp或者sftp进行上传.）
 
 	server {
 		    #侦听端口，默认80
@@ -237,11 +259,12 @@ linux下需要ftp或者sftp进行上传.
 			#虚拟主机日志
 	        #access_log  logs/host.access.log  main;
 			
-		    #4后台代理，前端访问目录名称
-			location ^~ /test/ {
-			    #server_test对应upstream server_test
-				proxy_pass   http://server_test/test/; 
-	        }
+		    #图片服务器，图片地址G:/web/images/下
+			location /images/ {  
+				root G:/web;
+				#开启图片浏览功能
+				autoindex on;
+			}
 			
 	        error_page  404   /404.html;
 	        location = /50x.html {
@@ -250,20 +273,24 @@ linux下需要ftp或者sftp进行上传.
 		}
 	}
 
-访问http://www.vue.com:8088/images/favicon.ico （F:/web/images/favicon.ico）
+访问http://www.vue.com/images/favicon.ico （ G:/web/images/favicon.ico）
 
 
 ### 7 负载均衡
 
 下面展示当前端请求www.vue.com/test/.....相关接口时，转发到127.0.0.1:8088或者127.0.0.1:8089下。
 
-如有接口：http://localhost:8089/user/login 
+如有**后台接口**http://127.0.0.1:8089/user/login；**前端访问**写为 http://www.vue.com/test/user/login?'+new Date().getTime()
 
     #后台请求ip配置
 	upstream server_test {
-		ip_hash;
-		server 127.0.0.1:8088 weight 2;#weight权重
-		server 127.0.0.1:8089 weight 1;
+			#加ip_hash后当前用户的请求只能去同一个服务。
+			#ip_hash;
+			server 10.0.0.11:9090 down;#down 表示单前的server暂时不参与负载.
+			#weight权重，max_fails ：允许请求失败的次数默认为1.当超过最大次数时，返回proxy_next_upstream 模块定义的错误.fail_timeout : max_fails次失败后，暂停的时间。
+			server 127.0.0.1:1111 weight=4 max_fails=3 fail_timeout=0s;
+			server 127.0.0.1:8089 weight=1 max_fails=3 fail_timeout=0s;
+			server 127.0.0.1:8088 backup;#backup： 其它所有的非backup机器down或者忙的时候，请求backup机器。所以这台机器压力会最轻。
 	}
 
     server {
@@ -277,16 +304,21 @@ linux下需要ftp或者sftp进行上传.
 		#虚拟主机日志
         #access_log  logs/host.access.log  main;
 
-		#1前台代理，访问http://localhost时进入前端目录入口D:\Test\vue\vue1\dist\index.html
+		#前台代理，访问http://localhost时进入前端目录入口D:\Test\vue\vue1\dist\index.html
         location / {
             root	 D:\Test\vue\vue1\dist;
             index  	 index.html;
         }
 		
-		#4后台代理，前端访问目录名称
+		#后台代理，前端访问目录名称。前端访问接口前加www.vue.com/test，如http://www.vue.com/test/user/login?'+new Date().getTime()
 		location ^~ /test/ {
 		    #server_test对应upstream server_test
 			proxy_pass   http://server_test/; 
+			
+			#连接时间超时时间设置
+			#proxy_connect_timeout       1;
+			#proxy_read_timeout          1;
+			#proxy_send_timeout          1;
         }
 		
 		#400错误页面
@@ -298,11 +330,49 @@ linux下需要ftp或者sftp进行上传.
 	}
 
 
+### 8 动静分离
 
-### 8 高并发
+让动态资源去后台服务器请求，静态资源去nginx请求。因为nginx处理静态资源速度快。
 
-1.做负载均衡（集群）
+需要把静态资源单独拷贝处理，在nginx中配置路径。
 
-2.资源动静分离（静态资源由nginx提供，动态资源由tomcat提供）
+	server {
+		    #侦听端口，默认80
+	        listen       80;
+			#域名，实际中需要申请。该处测试的时候可以在在hosts中加 (ip localhost)
+	        server_name  www.vue.com;
+			#编码格式
+			charset utf-8;
+	
+			#虚拟主机日志
+	        #access_log  logs/host.access.log  main;
+			
+		 	#静态资源F:/static下
+			location  ~ .*\.(jpg|jpeg|gif|png|ico|css|js|pdf|txt)$ {  
+				root G:/web/static;
+			}
+		
+	        error_page  404   /404.html;
+	        location = /50x.html {
+	            root  html;
+	        }
+		}
+	}
 
-3.
+
+### 9 高并发
+
+1.做负载均衡:集群；
+
+2.资源动静分离（静态资源由nginx提供，动态资源由tomcat提供:使用nginx或者DNS；
+
+3.缓存:以空间换时间，提高效率；
+
+4.限流：流量控制（队列实现；
+
+5.降级：在并发量特别高时，可以暂时关掉非核心服务。（如日志等只保留报错，警告日志暂时关掉等）。
+
+
+### 总结
+
+nginx主要用来做反向代理、负载均衡、资源动静分离以及图片服务器。
