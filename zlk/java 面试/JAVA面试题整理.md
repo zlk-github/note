@@ -444,10 +444,206 @@ https://www.cnblogs.com/jasontec/p/9699242.html
 --外键，主从表，需要直接与主键相关。
 	
 	第三范式需要确保数据表中的每一列数据都和主键直接相关，而不能间接相关。
-	
+
 	比如在设计一个订单数据表的时候，可以将客户编号作为一个外键和订单表建立相应的关系。而不可以在订单表中添加关于客户其它信息（比如姓名、所属公司等）的字段。如下面这两个表所示的设计就是一个满足第三范式的数据库表。
 
+22 ES
 
+
+23 消息队列
+
+
+24 分布式事务
+
+
+25 mysql类型
+
+
+26 常见分页
+
+
+27 mongdb
+
+
+28 kafka
+
+
+29 多线程
+
+30 集合（种类，线程安全）
+
+31 mybatis模糊全区别
+
+32 springBoot常用注解
+
+33 java类型
+
+34 aop与
+
+35 jdbc
+
+	public class JdbcUtil {
+		
+		private static final String driver = getValue("jdbc.driver");
+		private static final String url = getValue("jdbc.url");;
+		private static final String user = getValue("jdbc.username");;
+		private static final String password = getValue("jdbc.password");;
+
+		static{
+			// 加载驱动
+					try {
+						Class.forName(driver);
+					} catch (ClassNotFoundException e) {
+					System.out.println("加载驱动失败！"+e.getMessage());
+					}
+		}
+		
+		/**
+		 * 连接数据库对象
+		 * @return Connection 连接对象
+		 */
+		public static Connection getConnection(){
+			Connection conn = null;
+			try {
+				conn = DriverManager.getConnection(url, user, password);
+			} catch (SQLException e) {
+				System.out.println("数据库连接失败！"+e.getMessage());
+			}
+			return conn;		
+		}
+		
+		/**获取文件中的数据库连接配置信息
+		 * @param key 键
+		 * @return 值
+		 */
+		private static String getValue(String key){
+			//方式一：
+			//ResourceBundle bundle = ResourceBundle.getBundle("jdbc");
+			//return bundle.getString(key);	
+			InputStream in = JdbcUtil.class.getResourceAsStream("/jdbc.properties");
+			Properties properties = new Properties();
+			try {
+				properties.load(in);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return properties.getProperty(key);
+		}
+		
+		/**
+		 * 关闭连接
+		 * @param conn 连接对象
+		 * @param stmt 创建sql语句对象
+		 * @param rs 执行sql语句对象
+		 */
+		public static void close(Connection conn ,Statement stmt,ResultSet rs){
+			try {
+				if(rs!=null){
+				rs.close();
+				}
+				if(stmt!=null){
+				stmt.close();
+				}
+				if(conn!=null){
+				conn.close();
+				}
+			} catch (SQLException e) {
+				System.out.println("关闭资源失败！"+e.getMessage());
+			}
+		}
+		
+		public static void main(String[] args) {
+			System.out.println(getConnection());
+		}
+			
+	}
+
+
+		/**
+		 *更新指定的员工 信息 --预编译
+		 * @param emp 员工信息
+		 */
+		public void update(Employee emp) throws DataAccessExcption{
+			Connection conn = JdbcUtil.getConnection();
+			StringBuffer sql = new StringBuffer("update myemp set ename=? hiredate=?  where empno=?");
+			PreparedStatement ps = null;
+			try {
+				 ps = conn.prepareStatement(sql.toString());
+				 int i = 1;
+				 //setObject(i++, 值);
+				 ps.setObject(i++, emp.getEname());
+				 //加sql
+				 ps.setObject(i++, new java.sql.Date(emp.getHiredate().getTime()));
+				 ps.setObject(i++, emp.getEmpno());
+				 System.out.println(sql.toString());
+				 //不要sql
+				 int row = ps.executeUpdate();
+				 System.out.println("更新成功！");	 
+			} catch (SQLException e) {
+				throw new DataAccessExcption();
+			}finally{
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				JdbcUtil.close(conn,null, null);
+			}		
+			}
+
+		
+		/**
+		 * 员工名做模糊查询--非预编译
+		 * @param likeName
+		 * @return 	Employee 员工信息
+		 */
+		public List<Employee> findLike(String likeName){
+			Connection conn = JdbcUtil.getConnection();
+			Statement stmt = null;
+			ResultSet rs ;
+			Employee emp = null;
+			String sql = "select * from myemp where ename like "+"'%"+likeName+"%'";
+			System.out.println(sql);
+			List<Employee> list = new ArrayList<Employee>();
+			try {
+				 stmt = conn.createStatement();
+				 rs = stmt.executeQuery(sql);
+				 while(rs.next()){
+						Integer empno = rs.getInt("empno");
+						String ename = rs.getString("ename");
+						String job = rs.getString("job");
+						Integer mgr = rs.getInt("mgr");
+						Date hiredate = rs.getDate("hiredate");
+						Double sal = rs.getDouble("sal");
+						Double comm = rs.getDouble("comm");
+						Integer deptno = rs.getInt("deptno");
+
+						emp = new Employee(empno, ename, job, mgr, hiredate,
+								sal, comm, deptno);
+						list.add(emp);
+				 }
+				 
+			} catch (SQLException e) {
+				System.out.println("没有此员工！");
+				return null;	
+			}
+			return list;	
+		}
+		
+		public static void main(String[] args) {
+			Scanner input=new Scanner(System.in);//创建一个键盘扫描类对象
+			System.out.print("请您输入内容:");
+			int contents=input.nextInt(); //输入整型
+			String contents1=input.next(); //输入字符串型
+		}
+
+35 字符串
+
+36 final....
+
+37 nginx
 
 
 ### Java编程思想，Java开发指南
