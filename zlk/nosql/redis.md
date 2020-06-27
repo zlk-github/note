@@ -32,6 +32,8 @@ https://blog.csdn.net/qq_30764991/article/details/81564652
     2 bind 127.0.0.1改为bind 内网ip,否则只能本地访问到）
     使用Ctrl+c退出。
 
+    ./redis-cli -h 192.168.120.201 -p 6379
+
 
 	2关闭： ./redis-cli shutdown
 

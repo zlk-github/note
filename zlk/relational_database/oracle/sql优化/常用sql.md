@@ -31,3 +31,9 @@
 
 	grant connect,resource,dba to 用户名;
 
+
+	
+	2）sqlplus / as sysdba 或者 sqlplus sys/密码 as sysdba
+	3) create user 用户名 identified by 密码;
+	4) grant connect,resource to 用户名;
+	5) conn 用户名/密码
