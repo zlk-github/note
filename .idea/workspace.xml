@@ -2,9 +2,139 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="188afc6b-d3c3-46e6-af27-a4f303299f61" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/IDEA常见导包失败.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/Spring注解问题清单.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/data_warehouse.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/error_arrange/java/mybatis/result_maps.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/0" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/0367e560-cac8-11e7-9c4f-35f9ba09ec95" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/0473d220-8e4f-11e8-b410-a75e1f0acd2c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/054560b0-604a-11e9-a6b1-0be734fcc73e" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/08032150-53e1-11e8-b563-696e2da5857f" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/0c264470-3c9c-11e9-99a8-d3e10a36d673" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/0fc57a70-3fed-11e9-a35f-2743524e43c1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/1382e9e0-57f9-11e8-af46-6927e96ff1fc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/15b12030-f2a7-11e8-a264-a577a4dcd385" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/17a39bd0-4cc4-11e9-868f-0bb86557d23d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/228ece80-c06e-11e8-afc9-4db08e1ecfa6" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/26d7c940-45f9-11e9-b7e2-d3e0776326a7" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/30dba290-b01d-11e7-9093-3d4eb955c2e5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/34a7fa20-5488-11e9-9d41-eb305e2e15d7" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/3dda8670-5673-11e9-9eb1-2736a7d6ea9b" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/3ebb9e40-5a65-11e8-8688-db4a175ee56b" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/41608ab0-acba-11e7-be5e-69326b17dc90" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/448f81b0-5834-11e9-a096-3d95aa9da7a7" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/4491d4e0-da56-11e7-83b9-af1e6011785d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/44c76fe0-3d80-11e9-8c5c-8b54d319dad1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/451c68b0-513f-11e9-a200-7b5a847b1287" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/4a583b10-a97a-11e7-8a59-85fa4da4fe4f" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/53106b50-3d4a-11e9-b8f8-17f8204a503e" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/58edb860-3be3-11e9-af57-196eefd310b5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/5a6964c0-8fb1-11e8-b593-b1de795a31e4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/5ca3a070-5d8d-11e9-9878-93332c5e2249" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/5d4c5980-54fb-11e9-b7a7-d13cadd0a4c3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/5dd8a7f0-6a18-11e9-b900-d5558cab36a2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/6ae0d1e0-cacb-11e7-83e2-d7d04e939d4e" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/6e7001c0-3be3-11e9-af57-196eefd310b5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/6f97d830-407e-11e9-814e-0bc841b4377f" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/734db7e0-b6f7-11e7-8754-e11c1732e5f7" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/74bfb2e0-be54-11e7-9325-393cf0683e3a" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/7b89c610-5395-11e9-b1c6-37c760945ea8" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/859fcc40-59ac-11e9-83e5-cfb94cd084e1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/894684d0-8e53-11e8-b410-a75e1f0acd2c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/92d1b9e0-6638-11e8-bd5f-37f65add78b5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/98b860c0-952c-11e8-b8b3-690dce6077c1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/9c5339e0-f28d-11e7-9d80-732468eb8349" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/Fg_vm8snlWiYLraM7Xz7snFIJGk2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/FhpGxdtnPjzRslCSUnNKdBXdjGLQ" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/FiDhwLN1jdKDRmYqdySCaKcw-1R3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/FidoaTbc4rvNKqFISPUs_0_NC1Xd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/Fikw2zHy2kEE5fDxXgnH6aznmCEw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/Fiyy0OVXYs6dh8eIcTFz0eC_PZeG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/FjUg5IGe5ThyN4F3BgPwVLtNUH6z" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/FjgoMiaOzWmUU3JgdX3qvkBGGQ91" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/Fjz0BDR-Wh44YkTpn0nnZj7jqyyz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/FkEA14MZoO2nVDHiO2hRZcNASz14" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/FlbRfjjaZ7IpO0wZSrLH1HCIxa1t" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/FlwunFEYz1fj4FVYp3TrhOZ4ZgP4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/Fmd1PsUVWoQsFv77f9NSt6jCi3EW" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/FmfNJDcE5rxC2X8GjgH8cfc8sFdW" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/FnzjNghzs_ktFPUKeLaFX38rbNsL" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/FqG0F962PDGT8xRa0q78MUPhs-jf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/Fr00S_tdLGM-sQGvzdc9pbXCrVdF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/FrOLoGibmfOTK0DlHes4aOCGizrT" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/FrRYtPEGuW_ZbSEIUIQRHOPlzVPc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/Frl6G1w68QeqEpWzShYkZkF0ehqs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/FrlpzkY_9jMjGMSgc4XQFrwy4xf3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/Frw3aLUJKDMp8xDEc_FNQtzrYRMZ" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/FsAwwVyxgMp5jrw3V1OzBAFRlZXd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/FtL6oL1rhSW8Zv-tzFqbOAQSJoSg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/FtpKeUnInA1OgvIFtJjDKmOBO30g" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/FuMNvLb25yJ4RiEg_2OnS8jpI8aB" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/FuPwXhHD3AxVmjsNdsmwGMK2Snxm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/FugaAUCJPglWvm7ZO6Vldhc6Iq6h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/FvClrIKCKLu4pj4tys0BMpr3IEy_" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/MathJax.js.下载" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/a523d610-9076-11e8-9fe8-97289af2f542" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/aa364b30-712e-11e9-8a6f-8918e834f023" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/ae020f60-7491-11e7-9d88-4f74745275cd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/af7e5c80-41b9-11e9-b34d-756510bbabef" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/analytics.js.下载" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/b2b6f2e0-3ef3-11e9-9e3c-c5b76bc0f4a1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/b60798a0-bc8a-11e8-84df-35ecebb00a99" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/bbf23d30-e325-11e8-8494-8184b1b415d8" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/bundle2(1).css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/bundle2.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/cdbafab0-af14-11e8-b64a-bb37e4ac32c9" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/common.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/crown.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/cvip.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/d4eff380-2e99-11e9-87c9-cf350c28c77e" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/d5ffa6f0-5e8a-11e9-8ceb-f3e876b5b54b" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/d6df3cb0-3e79-11e9-b565-378070432200" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/d83aaf80-5f05-11e8-8a60-1bdde4cc4659" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/db04b3b0-f17b-11e8-b7c2-d74e319cbc21" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/db8f0230-566c-11e9-8242-61a7dfa31cf7" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/default.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/e60e9d60-0f18-11e9-b868-313934b72ac2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/f117a0f0-572a-11e7-bb59-0521c37fbc80" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/f384d180-a410-11e8-8f3e-11f74a61cc3e" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/f3c480e0-3be2-11e9-82f8-0f2e500ca934" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/f6163e00-8a36-11e8-a3f8-ff18634ae51e" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/f627c6b0-a670-11e8-8d3a-539f20667c21" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/f651cce0-642e-11e9-bfd2-4916b4f00cba" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/fdbdb950-985d-11e8-a5a1-17130ea31e3a" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/highlight.min.js.下载" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/hm.js.下载" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/indexGitChatRightTop.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/indexRight.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/jquery.fatNav.js.下载" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/js2.js(1).下载" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/js2.js.下载" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/maziArticleV2.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/new_chat_qr_code.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/push.js.下载" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/qrcode.min.js.下载" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/topV6.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/wechat-logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/Java 最常见 200+ 面试题全解析：面试必备_files/wxLogin.js.下载" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/~$VA面试题重点20200504.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/前端面试/nose.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/新建 DOCX 文档.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/java 面试/新建文本文档.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/~$项目报错整理.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/前端/vue/1.data_binding.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/前端/vue/2if_list.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/前端/vue/3class_style.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/前端/vue/4event.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/前端/vue/5subassembly.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/前端/vue/6comp_cut.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/前端/vue/7axios.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/前端/vue/ant-design-vue/vue_project.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/zlk/项目报错整理.docx" beforeDir="false" />
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -14,34 +144,6 @@
     <option name="testRunner" value="GRADLE" />
     <option name="delegatedBuild" value="true" />
   </component>
-  <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/zlk/java/nginx/nginx.md">
-          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-            <state split_layout="SPLIT">
-              <first_editor relative-caret-position="135">
-                <caret line="3" selection-start-line="3" selection-end-line="3" />
-              </first_editor>
-              <second_editor />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/zlk/java 面试/面试疑题.md">
-          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-            <state split_layout="SPLIT">
-              <first_editor relative-caret-position="45">
-                <caret line="7" column="41" selection-start-line="7" selection-start-column="41" selection-end-line="7" selection-end-column="41" />
-              </first_editor>
-              <second_editor />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -49,7 +151,7 @@
     <option name="generalSettings">
       <MavenGeneralSettings>
         <option name="localRepository" value="D:\structure\Maven\Repository" />
-        <option name="mavenHome" value="D:/structure/apache-maven-3.3.9" />
+        <option name="mavenHome" value="$PROJECT_DIR$/../../../../structure/apache-maven-3.3.9" />
         <option name="userSettingsFile" value="D:\structure\apache-maven-3.3.9\conf\settings.xml" />
       </MavenGeneralSettings>
     </option>
@@ -63,6 +165,7 @@
     <option name="width" value="1750" />
     <option name="height" value="980" />
   </component>
+  <component name="ProjectId" id="1xr6uDiU76sd9bwvriN2mMzhWJ4" />
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
@@ -101,6 +204,10 @@
       </pane>
     </panes>
   </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
@@ -111,20 +218,9 @@
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="settings.editor.selected.configurable" value="MavenSettings" />
+    <property name="settings.editor.selected.configurable" value="File.Encoding" />
   </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
-  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -137,6 +233,7 @@
       <updated>1559963210260</updated>
       <workItem from="1559963211412" duration="1372000" />
       <workItem from="1560642249106" duration="61000" />
+      <workItem from="1631101082157" duration="18000" />
     </task>
     <task id="LOCAL-00001" summary="提交">
       <created>1559963732867</created>
@@ -192,7 +289,7 @@
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="1" />
+    <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="提交" />
